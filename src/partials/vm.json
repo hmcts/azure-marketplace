@@ -149,5 +149,11 @@
       ]
     }
   ],
-  "outputs": {}
+  "outputs": {    
+    "privateIP": {
+    "type": "string",
+    "value": "reference('ipconfig1').ipConfigurations[0].properties.privateIPAddress"
+  }
+    
+  }
 }
