@@ -175,6 +175,23 @@
               "workspaceKey": "[parameters('vm').shared.logAnalyticsKey]"
             }
           }
+        },
+        {
+          "condition": "[not(empty(parameters('vm').shared.logAnalyticsId))]",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "[concat(variables('namespace'), parameters('index'), '/DependencyAgent')]",
+          "apiVersion": "2017-03-30",
+          "location": "[parameters('vm').shared.location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('namespace'), parameters('index'))]",
+            "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('namespace'), parameters('index')), 'OMSExtension')]"
+          ],
+          "properties": {
+              "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
+              "type": "DependencyAgentLinux",
+              "typeHandlerVersion": "9.4",
+              "autoUpgradeMinorVersion": true
+          }
         }
       ]
     }
