@@ -33,7 +33,7 @@
         "6.4.1",
         "6.4.2",
         "7.3.1",
-        "7.3.2"
+        "7.6.0"
       ],
       "metadata": {
         "description": "Elasticsearch version to install"
