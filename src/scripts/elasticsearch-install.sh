@@ -19,7 +19,7 @@ help()
     echo ""
     echo "Options:"
     echo "    -n      elasticsearch cluster name"
-    echo "    -v      elasticsearch version e.g. 6.4.1"
+    echo "    -v      elasticsearch version e.g. 7.0.0"
     echo "    -p      hostname prefix of nodes for unicast discovery"
     echo "    -m      heap size in megabytes to allocate to JVM"
 
@@ -261,6 +261,15 @@ done
 # Parameter state changes
 #########################
 
+# supports security features with a basic license
+if [[ $(dpkg --compare-versions "$ES_VERSION" "ge" "7.1.0"; echo $?) -eq 0 || ($(dpkg --compare-versions "$ES_VERSION" "ge" "6.8.0"; echo $?) -eq 0 && $(dpkg --compare-versions "$ES_VERSION" "lt" "7.0.0"; echo $?) -eq 0) ]]; then
+  BASIC_SECURITY=1
+fi
+
+# zen2 should emit the ports from hosts
+if dpkg --compare-versions "$ES_VERSION" "ge" "7.0.0"; then
+  UNICAST_HOST_PORT=""
+fi
 if [ ${CLUSTER_USES_DEDICATED_MASTERS} -ne 0 ]; then
     MINIMUM_MASTER_NODES=2
     UNICAST_HOSTS='["'"$NAMESPACE_PREFIX"'master-0:9300","'"$NAMESPACE_PREFIX"'master-1:9300","'"$NAMESPACE_PREFIX"'master-2:9300"]'
@@ -359,29 +368,38 @@ install_java()
 # Install Elasticsearch
 install_es()
 {
-    local PACKAGE="elasticsearch-$ES_VERSION.deb"
-    local SHASUM="$PACKAGE.sha512"
+       local OS_SUFFIX=""
+    if dpkg --compare-versions "$ES_VERSION" "ge" "7.0.0"; then
+      OS_SUFFIX="-amd64"
+    fi
+    local PACKAGE="elasticsearch-${ES_VERSION}${OS_SUFFIX}.deb"
+    local ALGORITHM="512"
+    local SHASUM="$PACKAGE.sha$ALGORITHM"
     local DOWNLOAD_URL="https://artifacts.elastic.co/downloads/elasticsearch/$PACKAGE?ultron=msft&gambit=azure"
     local SHASUM_URL="https://artifacts.elastic.co/downloads/elasticsearch/$SHASUM?ultron=msft&gambit=azure"
 
     log "[install_es] installing Elasticsearch $ES_VERSION"
     wget --retry-connrefused --waitretry=1 -q "$SHASUM_URL" -O $SHASUM
     local EXIT_CODE=$?
-    if [ $EXIT_CODE -ne 0 ]; then
-        log "[install_es] error downloading Elasticsearch $ES_VERSION checksum"
+    if [[ $EXIT_CODE -ne 0 ]]; then
+        log "[install_es] error downloading Elasticsearch $ES_VERSION sha$ALGORITHM checksum"
         exit $EXIT_CODE
     fi
     log "[install_es] download location - $DOWNLOAD_URL"
     wget --retry-connrefused --waitretry=1 -q "$DOWNLOAD_URL" -O $PACKAGE
     EXIT_CODE=$?
-    if [ $EXIT_CODE -ne 0 ]; then
+    if [[ $EXIT_CODE -ne 0 ]]; then
         log "[install_es] error downloading Elasticsearch $ES_VERSION"
         exit $EXIT_CODE
     fi
     log "[install_es] downloaded Elasticsearch $ES_VERSION"
-    shasum -a 512 -c $SHASUM
+    
+    # earlier sha files do not contain the package name. add it
+    grep -q "$PACKAGE" $SHASUM || sed -i "s/.*/&  $PACKAGE/" $SHASUM
+
+    shasum -a $ALGORITHM -c $SHASUM
     EXIT_CODE=$?
-    if [ $EXIT_CODE -ne 0 ]; then
+    if [[ $EXIT_CODE -ne 0 ]]; then
         log "[install_es] error validating checksum for Elasticsearch $ES_VERSION"
         exit $EXIT_CODE
     fi
@@ -419,6 +437,12 @@ install_repository_azure_plugin()
 install_additional_plugins()
 {
     SKIP_PLUGINS="license shield watcher marvel-agent graph cloud-azure x-pack repository-azure"
+
+    if dpkg --compare-versions "$ES_VERSION" "ge" "6.7.0"; then
+      # plugins are bundled in the distribution
+      SKIP_PLUGINS+=" ingest-geoip ingest-user-agent"
+    fi
+
     log "[install_additional_plugins] Installing additional plugins"
     for PLUGIN in $(echo $INSTALL_ADDITIONAL_PLUGINS | tr ";" "\n")
     do
@@ -440,21 +464,24 @@ install_additional_plugins()
 
 node_is_up()
 {
-  curl --output /dev/null --silent --head --fail $PROTOCOL://localhost:9200 -u elastic:$1 -H 'Content-Type: application/json' $CURL_SWITCH
+  curl --output /dev/null --silent --head --fail $PROTOCOL://localhost:9200 -u "elastic:$1" -H 'Content-Type: application/json' $CURL_SWITCH
   return $?
 }
 
 elastic_user_exists()
 {
   local USER_TYPENAME curl_error_code http_code
-  if [[ "${ES_VERSION}" == \5* ]]; then
-    USER_TYPENAME="reserved-user"
-  else
+  if [[ "${ES_VERSION}" == \6* ]]; then
     USER_TYPENAME="doc"
+    ELASTIC_USER_NAME="reserved-user-elastic"
+  else
+    # 7.x +
+    USER_TYPENAME="_doc"
+    ELASTIC_USER_NAME="reserved-user-elastic"
   fi
 
   exec 17>&1
-  http_code=$(curl -H 'Content-Type: application/json' --write-out '\n%{http_code}\n' $PROTOCOL://localhost:9200/.security/$USER_TYPENAME/elastic -u elastic:$1 $CURL_SWITCH | tee /dev/fd/17 | tail -n 1)
+  http_code=$(curl -H 'Content-Type: application/json' --write-out '\n%{http_code}\n' $PROTOCOL://localhost:9200/.security/$USER_TYPENAME/elastic -u "elastic:$1" $CURL_SWITCH | tee /dev/fd/17 | tail -n 1)
   curl_error_code=$?
   exec 17>&-
   if [ $http_code -eq 200 ]; then
@@ -517,9 +544,16 @@ apply_security_settings()
       log "[apply_security_settings] can already ping node using user provided credentials, exiting early!"
     else
       log "[apply_security_settings] start updating roles and users"
+      
+      local XPACK_SECURITY_PATH
+      if dpkg --compare-versions "$ES_VERSION" "ge" "7.0.0"; then
+        XPACK_SECURITY_PATH="_security"
+      else
+        XPACK_SECURITY_PATH="_xpack/security"
+      fi
 
-      local XPACK_USER_ENDPOINT="$PROTOCOL://localhost:9200/_xpack/security/user"
-      local XPACK_ROLE_ENDPOINT="$PROTOCOL://localhost:9200/_xpack/security/role"
+      local XPACK_USER_ENDPOINT="$PROTOCOL://localhost:9200/$XPACK_SECURITY_PATH/user"
+      local XPACK_ROLE_ENDPOINT="$PROTOCOL://localhost:9200/$XPACK_SECURITY_PATH/role"
 
       #update builtin `elastic` account.
       local ADMIN_JSON=$(printf '{"password":"%s"}\n' $USER_ADMIN_PWD)
@@ -915,7 +949,7 @@ configure_awareness_attributes()
   local ES_CONF=$1
   install_jq
   log "[configure_awareness_attributes] configure fault and update domain attributes"
-  local METADATA=$(curl -sH Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-08-01")
+  local METADATA=$(curl -sH Metadata:true "http://169.254.169.254/metadata/instance?api-version=2018-10-01")
   local FAULT_DOMAIN=$(jq -r .compute.platformFaultDomain <<< $METADATA)
   local UPDATE_DOMAIN=$(jq -r .compute.platformUpdateDomain <<< $METADATA)
   echo "node.attr.fault_domain: $FAULT_DOMAIN" >> $ES_CONF
@@ -1075,8 +1109,13 @@ configure_elasticsearch_yaml()
       local IDP_ENTITY_ID="$(grep -oP '\sentityID="(.*?)"\s' /etc/elasticsearch/saml/metadata.xml | sed 's/^.*"\(.*\)".*/\1/')"
       {
           echo -e ""
+           # include the realm type in the setting name in 7.x +
+          if dpkg --compare-versions "$ES_VERSION" "lt" "7.0.0"; then
           echo -e "xpack.security.authc.realms.saml_aad:"
           echo -e "  type: saml"
+          else
+            echo -e "xpack.security.authc.realms.saml.saml_aad:"
+          fi
           echo -e "  order: 2"
           echo -e "  idp.metadata.path: /etc/elasticsearch/saml/metadata.xml"
           echo -e "  idp.entity_id: \"$IDP_ENTITY_ID\""
@@ -1303,7 +1342,7 @@ setup_data_disk
 if [ ${INSTALL_XPACK} -ne 0 ]; then
     install_xpack
     # in 6.x we need to set up the bootstrap.password in the keystore to use when setting up users
-    if [[ "${ES_VERSION}" == \6* ]]; then
+    if [[ "${ES_VERSION}" == \7* ]]; then
         setup_bootstrap_password
     fi
 fi
