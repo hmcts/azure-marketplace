@@ -105,7 +105,7 @@ value defined in the template.
 <table>
   <tr><th>Parameter</td><th>Type</th><th>Description</th><th>Default Value</th></tr>
 
-  <tr><td>artifactsBaseUrl</td><td>string</td>
+  <tr><td>_artifactsLocation</td><td>string</td>
     <td>The base url of the Elastic ARM template.
     <strong>Required</strong></td><td>Raw content of the current branch</td></tr>
 
@@ -619,7 +619,7 @@ where `<name>` refers to the resource group you just created.
 
   ```powershell
   $clusterParameters = @{
-      "artifactsBaseUrl"="https://raw.githubusercontent.com/elastic/azure-marketplace/master/src"
+      "_artifactsLocation"="https://raw.githubusercontent.com/elastic/azure-marketplace/master/src"
       "esVersion" = "6.3.0"
       "esClusterName" = "elasticsearch"
       "loadBalancerType" = "internal"
@@ -647,7 +647,7 @@ where `<name>` refers to the resource group you just created.
 
 ## Targeting a specific template version
 
-You can target a specific version of the template by modifying the URI of the template and the artifactsBaseUrl parameter of the template.
+You can target a specific version of the template by modifying the URI of the template and the _artifactsLocation parameter of the template.
 
 **Targeting a specific template version is recommended for repeatable production deployments.**
 
@@ -659,7 +659,7 @@ $templateBaseUrl = "https://raw.githubusercontent.com/elastic/azure-marketplace/
 
 # minimum parameters required to deploy
 $clusterParameters = @{
-    "artifactsBaseUrl" = $templateBaseUrl
+    "_artifactsLocation" = $templateBaseUrl
     "esVersion" = "6.2.4"
     "adminUsername" = "russ"
     "adminPassword" = "Password1234"
