@@ -1294,7 +1294,7 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "[concat(parameters('artifactsBaseUrl'), '/')]",
+    "templateBaseUrl": "[concat(parameters('_artifactsLocation'), '/')]",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'partials/shared-resources.json')]",
     "networkTemplateUrl": "[concat(variables('templateBaseUrl'), 'networks/virtual-network-resources.json')]",
     "loadBalancerOptions": {
