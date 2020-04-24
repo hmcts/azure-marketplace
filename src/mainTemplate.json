@@ -16,6 +16,13 @@
         "description": "The sasToken required to access _artifactsLocation. When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
       }
     },
+    "templateBaseUrl": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/elastic/azure-marketplace/master/src/mainTemplate.json",
+      "metadata": {
+        "description": "Template uri"
+      }
+    },
     "elasticTags": {
       "type": "object",
       "defaultValue": {
@@ -1287,7 +1294,7 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "[concat(parameters('_artifactsLocation'), '/')]",
+    "templateBaseUrl": "[concat(parameters('artifactsBaseUrl'), '/')]",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'partials/shared-resources.json')]",
     "networkTemplateUrl": "[concat(variables('templateBaseUrl'), 'networks/virtual-network-resources.json')]",
     "loadBalancerOptions": {
