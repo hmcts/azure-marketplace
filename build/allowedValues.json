@@ -1,18 +1,21 @@
 {
   "versions": [
-    "5.4.3",
-    "5.5.3",
-    "5.6.12",
-    "6.0.1",
-    "6.1.3",
-    "6.2.4",
-    "6.3.2",
-    "6.4.1",
-    "6.4.2"
+    "6.6.2",
+    "6.7.2",
+    "6.8.5",
+    "7.0.1",
+    "7.1.1",
+    "7.2.1",
+    "7.3.2",
+    "7.4.2",
+    "7.5.2",
+    "7.6.2",
+    "7.7.0"
   ],
   "numberOfDataNodes" : 50,
   "numberOfClientNodes" : 20,
-  "diskSizes" : ["Small", "Medium", "Large", "XLarge", "XXLarge"],
+  "diskSizes" : ["32GiB", "64GiB", "128GiB", "256GiB", "512GiB", "1TiB", "2TiB", "4TiB", "8TiB", "16TiB", "32TiB"],
+  "defaultDiskSize": "1TiB",
   "vmAcceleratedNetworking": [
     "Standard_D2_v2",
     "Standard_D3_v2",
@@ -43,8 +46,6 @@
     "Standard_F4s",
     "Standard_F8s",
     "Standard_F16s",
-
-
 
     "Standard_D4_v3",
     "Standard_D8_v3",
@@ -95,27 +96,14 @@
     "Standard_M128m"
   ],
   "vmSizes": [
-    ["Standard_A0_v2", 1, "Standard", false],
     ["Standard_A1_v2", 2, "Standard", false],
     ["Standard_A2_v2", 4, "Standard", false],
-    ["Standard_A3_v2", 8, "Standard", false],
-    ["Standard_A4_v2", 16, "Standard", false],
-    ["Standard_A5_v2", 4, "Standard", false],
-    ["Standard_A6_v2", 8, "Standard", false],
-    ["Standard_A7_v2", 16, "Standard", false],
-    ["Standard_A8_v2", 32, "Standard", false],
-    ["Standard_A9_v2", 64, "Standard", false],
-    ["Standard_A10_v2", 32, "Standard", false],
-    ["Standard_A11_v2", 64, "Standard", false],
+    ["Standard_A4_v2", 8, "Standard", false],
+    ["Standard_A8_v2", 16, "Standard", false],
 
-    ["Standard_D1", 4, "Standard", false],
-    ["Standard_D2", 8, "Standard", false],
-    ["Standard_D3", 16, "Standard", false],
-    ["Standard_D4", 32, "Standard", false],
-    ["Standard_D11", 8, "Standard", false],
-    ["Standard_D12", 16, "Standard", false],
-    ["Standard_D13", 32, "Standard", false],
-    ["Standard_D14", 64, "Standard", false],
+    ["Standard_A2m_v2", 4, "Standard", false],
+    ["Standard_A4m_v2", 8, "Standard", false],
+    ["Standard_A8m_v2", 16, "Standard", false],
 
     ["Standard_D1_v2", 2, "Standard", false],
     ["Standard_D2_v2", 4, "Standard", false],
@@ -128,21 +116,19 @@
     ["Standard_D14_v2", 64, "Standard", false],
     ["Standard_D15_v2", 64, "Standard", false],
 
+    ["Standard_D2as_v4", 4, "Premium", false],
+    ["Standard_D4as_v4", 8, "Premium", false],
+    ["Standard_D8as_v4", 16, "Premium", false],
+    ["Standard_D16as_v4", 32, "Premium", false],
+    ["Standard_D32as_v4", 32, "Premium", false],
+
     ["Standard_D2_v3", 4, "Standard", false],
     ["Standard_D4_v3", 8, "Standard", false],
     ["Standard_D8_v3", 16, "Standard", false],
     ["Standard_D16_v3", 32, "Standard", false],
     ["Standard_D32_v3", 32, "Standard", false],
+    ["Standard_D48_v3", 32, "Standard", false],
     ["Standard_D64_v3", 32, "Standard", false],
-
-    ["Standard_DS1", 4, "Premium", false],
-    ["Standard_DS2", 8, "Premium", false],
-    ["Standard_DS3", 16, "Premium", false],
-    ["Standard_DS4", 32, "Premium", false],
-    ["Standard_DS11", 8, "Premium", false],
-    ["Standard_DS12", 16, "Premium", false],
-    ["Standard_DS13", 32, "Premium", false],
-    ["Standard_DS14", 64, "Premium", false],
 
     ["Standard_DS1_v2", 4, "Premium", true],
     ["Standard_DS2_v2", 8, "Premium", true],
@@ -161,6 +147,7 @@
     ["Standard_D8s_v3", 16, "Premium", true],
     ["Standard_D16s_v3", 32, "Premium", false],
     ["Standard_D32s_v3", 32, "Premium", false],
+    ["Standard_D48s_v3", 32, "Premium", false],
     ["Standard_D64s_v3", 32, "Premium", false],
 
     ["Standard_E2_v3", 4, "Standard", false],
@@ -178,6 +165,13 @@
     ["Standard_E32s_v3", 32, "Premium", false],
     ["Standard_E64s_v3", 32, "Premium", false],
     ["Standard_E64is_v3", 32, "Premium", false],
+
+    ["Standard_E2as_v4", 4, "Premium", false],
+    ["Standard_E4as_v4", 8, "Premium", false],
+    ["Standard_E8as_v4", 16, "Premium", false],
+    ["Standard_E16as_v4", 32, "Premium", false],
+    ["Standard_E20as_v4", 32, "Premium", false],
+    ["Standard_E32as_v4", 32, "Premium", false],
 
     ["Standard_F1", 2, "Standard", false],
     ["Standard_F2", 4, "Standard", false],
@@ -216,6 +210,13 @@
     ["Standard_L16s", 64, "Premium", false],
     ["Standard_L32s", 64, "Premium", false],
 
+    ["Standard_L8s_v2", 16, "Premium", false],
+    ["Standard_L16s_v2", 32, "Premium", false],
+    ["Standard_L32s_v2", 32, "Premium", false],
+    ["Standard_L48s_v2", 32, "Premium", false],
+    ["Standard_L64s_v2", 32, "Premium", false],
+    ["Standard_L80s_v2", 32, "Premium", false],
+
     ["Standard_M8ms", 8, "Premium", false],
     ["Standard_M16ms", 16, "Premium", false],
     ["Standard_M32ts", 32, "Premium", false],
@@ -232,7 +233,7 @@
     ["Standard_M128m", 64, "Premium", false]
   ],
   "ignoredKibanaVmsBecauseNotEnoughRam" : [
-    "Standard_A0_v2", "Standard_A1_v2"
+    "Standard_A1_v2"
   ],
   "locations" : {
     "eastus": { "platformFaultDomainCount": 3 },
@@ -240,58 +241,15 @@
     "centralus": { "platformFaultDomainCount": 3 },
     "northcentralus": { "platformFaultDomainCount": 3 },
     "southcentralus": { "platformFaultDomainCount": 3 },
-    "westcentralus": { "platformFaultDomainCount": 2 },
     "westus": { "platformFaultDomainCount": 3 },
-    "westus2": { "platformFaultDomainCount": 2 },
-    "canadaeast": { "platformFaultDomainCount": 2 },
-    "canadacentral": { "platformFaultDomainCount": 2 },
-    "brazilsouth": { "platformFaultDomainCount": 2 },
+
+    "canadacentral": { "platformFaultDomainCount": 3 },
 
     "northeurope": { "platformFaultDomainCount": 3 },
-    "westeurope": { "platformFaultDomainCount": 3 },
-    "francecentral": { "platformFaultDomainCount": 2 },
-    "francesouth": { "platformFaultDomainCount": 2 },
-    "ukwest": { "platformFaultDomainCount": 2 },
-    "uksouth": { "platformFaultDomainCount": 2 },
-    "germanycentral": { "platformFaultDomainCount": 2 },
-    "germanynortheast": { "platformFaultDomainCount": 2 },
-
-    "germanynorth": { "platformFaultDomainCount": 2 },
-    "germanywestcentral": { "platformFaultDomainCount": 2 },
-    "switzerlandnorth": { "platformFaultDomainCount": 2 },
-    "switzerlandwest": { "platformFaultDomainCount": 2 },
-
-    "southeastasia": { "platformFaultDomainCount": 2 },
-    "eastasia": { "platformFaultDomainCount": 2 },
-    "australiaeast": { "platformFaultDomainCount": 2 },
-    "australiasoutheast": { "platformFaultDomainCount": 2 },
-    "australiacentral": { "platformFaultDomainCount": 2 },
-    "australiacentral2": { "platformFaultDomainCount": 2 },
-    "chinaeast": { "platformFaultDomainCount": 2 },
-    "chinanorth": { "platformFaultDomainCount": 2 },
-    "centralindia": { "platformFaultDomainCount": 2 },
-    "westindia": { "platformFaultDomainCount": 2 },
-    "southindia": { "platformFaultDomainCount": 2 },
-    "japaneast": { "platformFaultDomainCount": 2 },
-    "japanwest": { "platformFaultDomainCount": 2 },
-    "koreacentral": { "platformFaultDomainCount": 2 },
-    "koreasouth": { "platformFaultDomainCount": 2 },
-
-    "southafricawest": { "platformFaultDomainCount": 2 },
-    "southafricanorth": { "platformFaultDomainCount": 2 },
-    "uaecentral": { "platformFaultDomainCount": 2 },
-    "uaenorth": { "platformFaultDomainCount": 2 },
-
-    "usgovvirginia": { "platformFaultDomainCount": 2 },
-    "usgoviowa": { "platformFaultDomainCount": 2 },
-    "usgovarizona": { "platformFaultDomainCount": 2 },
-    "usgovtexas": { "platformFaultDomainCount": 2 },
-    "usdodeast": { "platformFaultDomainCount": 2 },
-    "usdodcentral": { "platformFaultDomainCount": 2 },
-    "usseceast": { "platformFaultDomainCount": 2 },
-    "ussecwest": { "platformFaultDomainCount": 2 }
+    "westeurope": { "platformFaultDomainCount": 3 }
   },
-  "trackingGuids": {
-    "marketplace": "pid-53DEEEE7-A572-4F07-99DC-151B67BB6F1F"
+  "marketplace": {
+    "trackingGuids": "pid-53DEEEE7-A572-4F07-99DC-151B67BB6F1F",
+    "_artifactsLocation": "[deployment().properties.templateLink.uri]"
   }
 }

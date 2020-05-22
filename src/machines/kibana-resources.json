@@ -1,13 +1,7 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "templateBaseUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "Base uri of resources"
-      }
-    },
     "location": {
       "type": "string",
       "metadata": {
@@ -64,25 +58,12 @@
       "metadata": {
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
-    },
-    "logAnalyticsId": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Log Analytics ID"
-      }
-    },
-    "logAnalyticsKey": {
-      "type": "securestring",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Log Analytics Key"
-      }
     }
   },
   "variables": {
     "namespace": "[parameters('namespace')]",
-    "subnetId": "[concat(resourceId(parameters('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks', parameters('networkSettings').name), '/subnets/', parameters('networkSettings').subnet.name)]",
+    "subnetId": "[resourceId(parameters('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', parameters('networkSettings').name, parameters('networkSettings').subnet.name)]",
+    "publicIpName": "[concat(variables('namespace'), '-ip')]",
     "securityGroupName": "[concat(variables('namespace'), '-nsg')]",
     "nicName": "[concat(variables('namespace'), '-nic')]",
     "password_osProfile": {
@@ -109,17 +90,7 @@
   },
   "resources": [
     {
-      "name": "[concat(variables('namespace'), '-asg')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2018-08-01",
-      "location": "[parameters('location')]",
-      "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
-      },
-      "properties": {}
-    },
-    {
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('securityGroupName')]",
       "location": "[parameters('location')]",
@@ -131,11 +102,11 @@
           {
             "name": "SSH",
             "properties": {
-              "description": "Allows inbound SSH traffic from VirtualNetwork",
+              "description": "Allows inbound SSH traffic from anyone",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "[parameters('osSettings').managementPort]",
-              "sourceAddressPrefix": "VirtualNetwork",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 100,
@@ -145,11 +116,11 @@
           {
             "name": "Kibana",
             "properties": {
-              "description": "Allows inbound Kibana HTTP traffic from VirtualNetwork",
+              "description": "Allows inbound Kibana traffic from anyone",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "5601",
-              "sourceAddressPrefix": "VirtualNetwork",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 200,
@@ -160,7 +131,7 @@
       }
     },
     {
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[parameters('location')]",
@@ -168,8 +139,7 @@
         "provider": "[toUpper(parameters('elasticTags').provider)]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]",
-        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), '-asg')]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]"
       ],
       "properties": {
         "primary": true,
@@ -179,14 +149,12 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIpName'))]"
+              },
               "subnet": {
                 "id": "[variables('subnetId')]"
-              },
-              "applicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), '-asg'))]"
-                }
-              ]
+              }
             }
           }
         ],
@@ -196,7 +164,7 @@
       }
     },
     {
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('namespace')]",
       "location": "[parameters('location')]",
@@ -234,34 +202,12 @@
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "[concat(variables('namespace'), '/script')]",
-          "apiVersion": "2017-12-01",
-          "location": "[parameters('location')]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'))]",
-            "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('namespace'), 'OMSExtension')]"
-          ],
-          "properties": "[parameters('osSettings').extensionSettings.kibana]"
-        },
-        {
-          "condition": "[not(empty(parameters('logAnalyticsId')))]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat(variables('namespace'), '/OMSExtension')]",
-          "apiVersion": "2018-06-01",
+          "apiVersion": "2019-03-01",
           "location": "[parameters('location')]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'))]"
           ],
-          "properties": {
-            "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-            "type": "OmsAgentForLinux",
-            "typeHandlerVersion": "1.7",
-            "settings": {
-              "workspaceId": "[parameters('logAnalyticsId')]"
-            },
-            "protectedSettings": {
-              "workspaceKey": "[parameters('logAnalyticsKey')]"
-            }
-          }
+          "properties": "[parameters('osSettings').extensionSettings.kibana]"
         }
       ]
     }
