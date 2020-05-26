@@ -1295,6 +1295,28 @@
       "metadata": {
         "description": "The Base-64 encoded certificate (.cer) used to secure the HTTP layer of Elasticsearch. Used by the Application Gateway to whitelist certificates used by the backend pool. Must be set if using esHttpCertBlob to secure the HTTP layer of Elasticsearch"
       }
+    },
+    "cnpEnv": {
+      "type": "string",
+      "defaultValue": "",
+      "maxLength": 10,
+      "metadata": {
+        "description": "CNP environment into which we're building this cluster, e.g. sprod, aat"
+      }
+    },
+    "logAnalyticsId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Log Anytics ID. Used by VMs for logging."
+      }
+    },
+    "logAnalyticsKey": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Log Anytics Key. Used by VMs for logging."
+      }
     }
   },
   "variables": {
@@ -1887,6 +1909,7 @@
       "vmDataNodeStorageAccountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "vmDataNodeAcceleratedNetworking": "[parameters('vmDataNodeAcceleratedNetworking')]",
       "vmHostNamePrefix": "[parameters('vmHostNamePrefix')]",
+      "cnpEnv": "[parameters('cnpEnv')]",
       "vmClientNodeCount": "[parameters('vmClientNodeCount')]",
       "vmSizeClientNodes": "[parameters('vmSizeClientNodes')]",
       "vmClientNodeAcceleratedNetworking": "[parameters('vmClientNodeAcceleratedNetworking')]",
@@ -1940,10 +1963,13 @@
     },
     "commonVmSettings": {
       "namespacePrefix": "[parameters('vmHostNamePrefix')]",
+      "cnpEnv": "[parameters('cnpEnv')]",
       "storageAccountName": "[concat('elastic', uniqueString(resourceGroup().id, deployment().name))]",
       "location": "[variables('location')]",
       "subnet": "[variables('networkSettings').subnet]",
       "subnetId": "[resourceId(variables('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', variables('networkSettings').name, variables('networkSettings').subnet.name)]",
+      "logAnalyticsId": "[parameters('logAnalyticsId')]",
+      "logAnalyticsKey": "[parameters('logAnalyticsKey')]",
       "credentials": {
         "adminUsername": "[parameters('adminUsername')]",
         "password": "[parameters('adminPassword')]",
