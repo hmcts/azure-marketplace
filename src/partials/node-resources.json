@@ -242,7 +242,7 @@
       "properties": "[variables('vmNsgProperties')[if(variables('standardExternalLoadBalancer'), 1, 0)]]"
     },
     {
-      "condition": "[greater(int(parameters('topologySettings').vmClientNodeCount, 0))]",
+      "condition": "[greater(int(parameters('topologySettings').vmClientNodeCount), 0)]",
       "name": "client-nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
@@ -311,7 +311,7 @@
               "installScript": "[parameters('osSettings').extensionSettings.data]",
               "size": "[parameters('topologySettings').vmSizeDataNodes]",
               "storageAccountType": "[parameters('topologySettings').vmDataNodeStorageAccountType]",
-              "count": "[parameters('topologySettings').vmDataNodeCount]",
+              "count": "[int(parameters('topologySettings').vmDataNodeCount)]",
               "backendPools": "[parameters('topologySettings').dataLoadBalancerBackEndPools]",
               "imageReference": "[parameters('osSettings').imageReference]",
               "platformFaultDomainCount": "[variables('platformFaultDomainCount')]",
