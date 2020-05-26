@@ -50,6 +50,7 @@
     }
   },
   "variables": {
+    "_artifactsLocation": "[concat(parameters('_artifactsLocation'), '/')]",
     "jumpboxTemplates": {
       "No": "empty/empty-jumpbox-resources.json",
       "Yes": "machines/jumpbox-resources.json"
@@ -198,7 +199,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), 'machines/master-nodes-resources.json')]",
+          "uri": "[concat(variables('_artifactsLocation'), 'machines/master-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -252,7 +253,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), 'machines/client-nodes-resources.json')]",
+          "uri": "[concat(variables('_artifactsLocation'), 'machines/client-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -416,7 +417,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), 'machines/logstash-resources.json')]",
+          "uri": "[concat(variables('_artifactsLocation'), 'machines/logstash-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
