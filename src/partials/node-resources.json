@@ -54,13 +54,13 @@
       "No": "empty/empty-jumpbox-resources.json",
       "Yes": "machines/jumpbox-resources.json"
     },
-    "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplates')[parameters('topologySettings').jumpbox], parameters('_artifactsLocationSasToken')))]",
+    "jumpboxTemplateUrl": "[concat(parameters('_artifactsLocation'), variables('jumpboxTemplates')[parameters('topologySettings').jumpbox])]",
     "kibanaTemplates": {
       "No": "empty/empty-kibana-resources.json",
       "Yes": "machines/kibana-resources.json"
     },
-    "kibanaTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaTemplates')[parameters('topologySettings').kibana], parameters('_artifactsLocationSasToken')))]",
-    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/data-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+    "kibanaTemplateUrl": "[concat(parameters('_artifactsLocation'), variables('kibanaTemplates')[parameters('topologySettings').kibana])]",
+    "dataTemplateUrl": "[concat(parameters('_artifactsLocation'), 'machines/data-nodes-resources.json')]",
     "locations": {
       "eastus": {
         "platformFaultDomainCount": 3
@@ -198,7 +198,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/master-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('_artifactsLocation'), 'machines/master-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -252,7 +252,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/client-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('_artifactsLocation'), 'machines/client-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -416,7 +416,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/logstash-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('_artifactsLocation'), 'machines/logstash-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
