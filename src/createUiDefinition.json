@@ -1461,6 +1461,28 @@
             ]
           },
           {
+            "name": "es_read",
+            "type": "Microsoft.Common.Section",
+            "label": "es_read (read only) user account",
+            "elements": [{
+              "name": "securityReadPassword",
+              "type": "Microsoft.Common.PasswordBox",
+              "label": {
+                "password": "'es_read' user password",
+                "confirmPassword": "Confirm password"
+              },
+              "toolTip": "Password to use for the 'es_read' user. This is a user account configured with limited read-only access",
+              "constraints": {
+                "required": true,
+                "regex": "^.{12,}",
+                "validationMessage": "Password must be at least 12 characters long"
+              },
+              "options": {
+                "hideConfirmation": false
+              }
+            }]
+          },
+          {
             "name": "es_apm",
             "type": "Microsoft.Common.Section",
             "label": "APM system user account",
@@ -1817,6 +1839,7 @@
       "sshPublicKey": "[basics('password').sshPublicKey]",
       "securityBootstrapPassword": "",
       "securityAdminPassword": "[steps('securityStep').es_admin.securityAdminPassword]",
+      "securityReadPassword": "[steps('securityStep').es_read.securityReadPassword]",
       "securityKibanaPassword": "[steps('securityStep').es_kibana.securityKibanaPassword]",
       "securityLogstashPassword": "[steps('securityStep').es_logstash.securityLogstashPassword]",
       "securityBeatsPassword": "[steps('securityStep').es_beats.securityBeatsPassword]",

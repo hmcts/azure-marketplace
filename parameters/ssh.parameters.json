@@ -58,6 +58,7 @@
   "adminPassword":{"value":"<value-ignored>"},
   "securityBootstrapPassword":{"value":""},
   "securityAdminPassword":{"value":""},
+  "securityReadPassword":{"value":""},
   "securityKibanaPassword":{"value":""},
   "securityLogstashPassword":{"value":""},
   "securityBeatsPassword":{"value":""},

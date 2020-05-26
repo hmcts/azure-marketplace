@@ -151,7 +151,8 @@ az group deployment create \
                vmDataDiskCount=1 dataNodesAreMasterEligible=Yes \
                adminUsername=russ adminPassword=Password1234 \
                securityBootstrapPassword=bootstrapPassword123 \
-               securityAdminPassword=adminPassword123 \              
+               securityAdminPassword=adminPassword123 \
+               securityReadPassword=readPassword123 \              
                securityKibanaPassword=kibanaPassword123 \
                securityLogstashPassword=logstashPassword123 \
                securityBeatsPassword=beatsPassword123 \
@@ -176,6 +177,7 @@ $parameters = @{
   "adminPassword" = "Password1234"
   "securityBootstrapPassword" = "bootstrapPassword123"
   "securityAdminPassword" = "adminPassword123"
+  "securityReadPassword" = "readPassword123"
   "securityKibanaPassword" = "kibanaPassword123"
   "securityLogstashPassword" = "logstashPassword123"
   "securityBeatsPassword" = "beatsPassword123"
@@ -1081,6 +1083,10 @@ Security password for the `beats_system` built-in user account. This is the acco
 Beats can use to communicate with Elasticsearch. Must be greater
 than six characters in length. Valid only for Elasticsearch 6.3.0+
 
+`securityReadPassword`::
+Security password for an `es_read` user account configured with a user (read-only) role with
+the following definition
+
 `securityApmPassword`::
 Security password for the `apm_system` built-in user account. This is the account that the 
 APM server can use to communicate with Elasticsearch. Must be greater
@@ -1295,6 +1301,7 @@ az group deployment create \
         adminPassword=Password1234 \
         securityBootstrapPassword=BootstrapPassword123 \
         securityAdminPassword=AdminPassword123 \
+        securityReadPassword=ReadPassword123 \
         securityKibanaPassword=KibanaPassword123 \
         securityLogstashPassword=LogstashPassword123 \
         securityBeatsPassword=BeatsPassword123 \
@@ -1332,6 +1339,7 @@ $parameters = @{
     "adminPassword" = "Password1234"
     "securityBootstrapPassword" = "BootstrapPassword123"
     "securityAdminPassword" = "AdminPassword123"
+    "securityReadPassword" = "ReadPassword123"
     "securityKibanaPassword" = "KibanaPassword123"
     "securityLogstashPassword" = "LogstashPassword123"
     "securityBeatsPassword" = "BeatsPassword123"
