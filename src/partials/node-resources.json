@@ -242,7 +242,7 @@
       "properties": "[variables('vmNsgProperties')[if(variables('standardExternalLoadBalancer'), 1, 0)]]"
     },
     {
-      "condition": "[greater(parameters('topologySettings').vmClientNodeCount, 0)]",
+      "condition": "[greater(int(parameters('topologySettings').vmClientNodeCount, 0))]",
       "name": "client-nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
@@ -268,7 +268,7 @@
               "namespace": "[concat(parameters('commonVmSettings').namespacePrefix, 'client-')]",
               "installScript": "[parameters('osSettings').extensionSettings.client]",
               "size": "[parameters('topologySettings').vmSizeClientNodes]",
-              "count": "[parameters('topologySettings').vmClientNodeCount]",
+              "count": "[int(parameters('topologySettings').vmClientNodeCount)]",
               "storageAccountType": "Standard_LRS",
               "backendPools": "[parameters('topologySettings').loadBalancerBackEndPools]",
               "imageReference": "[parameters('osSettings').imageReference]",
