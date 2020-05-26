@@ -1325,17 +1325,18 @@
     }
   },
   "variables": {
+    "_artifactsLocation": "[concat(parameters('_artifactsLocation'), '/')]",
+    "sharedTemplateUrl": "[concat(variables('_artifactsLocation'), 'partials/shared-resources.json')]",
+    "networkTemplateUrl": "[concat(variables('_artifactsLocation'), 'networks/virtual-network-resources.json')]",
     "esVersionMajor": "[int(split(parameters('esVersion'), '.')[0])]",
     "esVersionMinor": "[int(split(parameters('esVersion'), '.')[1])]",
-    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json'))]",
-    "networkTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('networks/virtual-network-resources.json'))]",
     "loadBalancerOptions": {
       "internal": "internal-lb-resources",
       "external": "external-lb-resources",
       "gateway": "[concat(toLower(parameters('appGatewayTier')),'-application-gateway-resources')]"
     },
-    "loadBalancerTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('loadbalancers/', variables('loadBalancerOptions')[parameters('loadBalancerType')],'.json'))]",
-    "osSettingsTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('settings/ubuntuSettings.json'))]",
+    "loadBalancerTemplateUrl": "[concat(variables('_artifactsLocation'), 'loadbalancers/', variables('loadBalancerOptions')[parameters('loadBalancerType')],'.json')]",
+    "osSettingsTemplateUrl": "[concat(variables('_artifactsLocation'), 'settings/ubuntuSettings.json')]",
     "location": "[parameters('location')]",
     "azureCloudStorageAccount": {
       "name": "[parameters('azureCloudStorageAccountName')]",
@@ -1998,7 +1999,7 @@
       "No": "empty/empty-kibana-ip-resources.json",
       "Yes": "empty/empty-kibana-ip-resources.json"
     },
-    "kibanaIpTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaIpTemplates')[variables('topologySettings').kibana]))]"
+    "kibanaIpTemplateUrl": "[concat(variables('_artifactsLocation'), variables('kibanaIpTemplates')[variables('topologySettings').kibana])]"
   },
   "resources": [
     {
