@@ -1358,7 +1358,7 @@
       "transportCaCertPassword": "[parameters('esTransportCaCertPassword')]",
       "transportCertPassword": "[parameters('esTransportCertPassword')]",
       "securityAdminPwd": "[parameters('securityAdminPassword')]",
-      "securityReadPwd": "[parameters('securityReadPassword')]", //Custom Read Role
+      "securityReadPwd": "[parameters('securityReadPassword')]",
       "securityKibanaPwd": "[parameters('securityKibanaPassword')]",
       "securityLogstashPwd": "[parameters('securityLogstashPassword')]",
       "securityBeatsPwd": "[parameters('securityBeatsPassword')]",
@@ -1916,7 +1916,7 @@
       "vmDataNodeStorageAccountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "vmDataNodeAcceleratedNetworking": "[parameters('vmDataNodeAcceleratedNetworking')]",
       "vmHostNamePrefix": "[parameters('vmHostNamePrefix')]",
-      "cnpEnv": "[parameters('cnpEnv')]", //Custom CNP ENV
+      "cnpEnv": "[parameters('cnpEnv')]",
       "vmClientNodeCount": "[parameters('vmClientNodeCount')]",
       "vmSizeClientNodes": "[parameters('vmSizeClientNodes')]",
       "vmClientNodeAcceleratedNetworking": "[parameters('vmClientNodeAcceleratedNetworking')]",
@@ -1975,8 +1975,8 @@
       "location": "[variables('location')]",
       "subnet": "[variables('networkSettings').subnet]",
       "subnetId": "[resourceId(variables('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', variables('networkSettings').name, variables('networkSettings').subnet.name)]",
-      "logAnalyticsId": "[parameters('logAnalyticsId')]", //Custom LAW
-      "logAnalyticsKey": "[parameters('logAnalyticsKey')]", //Custom LAW
+      "logAnalyticsId": "[parameters('logAnalyticsId')]",
+      "logAnalyticsKey": "[parameters('logAnalyticsKey')]",
       "credentials": {
         "adminUsername": "[parameters('adminUsername')]",
         "password": "[parameters('adminPassword')]",
