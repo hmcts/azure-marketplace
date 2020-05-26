@@ -98,7 +98,6 @@ var bootstrapTest = (t, defaultVersion) =>
   testParameters.sshPublicKey.value = config.deployments.ssh;
   testParameters.securityBootstrapPassword.value = config.deployments.securityPassword;
   testParameters.securityAdminPassword.value = config.deployments.securityPassword;
-  testParameters.securityReadPassword.value = config.deployments.securityPassword;
   testParameters.securityRemoteMonitoringPassword.value = config.deployments.securityPassword;
   testParameters.securityKibanaPassword.value = config.deployments.securityPassword;
   testParameters.securityLogstashPassword.value = config.deployments.securityPassword;
