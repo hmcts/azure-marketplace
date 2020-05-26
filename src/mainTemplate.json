@@ -4,7 +4,7 @@
   "parameters": {
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://raw.github.com/hmcts/azure-marketplace/tree/origin/v7upgrade/src",
+      "defaultValue": "https://raw.github.com/hmcts/azure-marketplace/tree/origin/v7upgrade/src/",
       "metadata": {
         "description": "The base URI where artifacts required by this template are located, including a trailing '/'"
       }
