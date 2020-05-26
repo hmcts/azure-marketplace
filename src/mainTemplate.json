@@ -1117,6 +1117,12 @@
         "description": "Password for the built-in 'elastic' user. Should be 12 characters or more, with a minimum of 6 characters"
       }
     },
+    "securityReadPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Custom Password for the 'es_read' user with user (read-only) role. Should be 12 characters or more, with a minimum of 6 characters"
+      }
+    },
     "securityKibanaPassword": {
       "type": "securestring",
       "metadata": {
@@ -1301,21 +1307,21 @@
       "defaultValue": "",
       "maxLength": 10,
       "metadata": {
-        "description": "CNP environment into which we're building this cluster, e.g. sprod, aat"
+        "description": "Custom CNP environment into which we're building this cluster, e.g. sprod, aat"
       }
     },
     "logAnalyticsId": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Log Anytics ID. Used by VMs for logging."
+        "description": "Custom Log Anytics ID. Used by VMs for logging."
       }
     },
     "logAnalyticsKey": {
       "type": "securestring",
       "defaultValue": "",
       "metadata": {
-        "description": "Log Anytics Key. Used by VMs for logging."
+        "description": "Custom Log Anytics Key. Used by VMs for logging."
       }
     }
   },
@@ -1352,6 +1358,7 @@
       "transportCaCertPassword": "[parameters('esTransportCaCertPassword')]",
       "transportCertPassword": "[parameters('esTransportCertPassword')]",
       "securityAdminPwd": "[parameters('securityAdminPassword')]",
+      "securityReadPwd": "[parameters('securityReadPassword')]", //Custom Read Role
       "securityKibanaPwd": "[parameters('securityKibanaPassword')]",
       "securityLogstashPwd": "[parameters('securityLogstashPassword')]",
       "securityBeatsPwd": "[parameters('securityBeatsPassword')]",
@@ -1909,7 +1916,7 @@
       "vmDataNodeStorageAccountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "vmDataNodeAcceleratedNetworking": "[parameters('vmDataNodeAcceleratedNetworking')]",
       "vmHostNamePrefix": "[parameters('vmHostNamePrefix')]",
-      "cnpEnv": "[parameters('cnpEnv')]",
+      "cnpEnv": "[parameters('cnpEnv')]", //Custom CNP ENV
       "vmClientNodeCount": "[parameters('vmClientNodeCount')]",
       "vmSizeClientNodes": "[parameters('vmSizeClientNodes')]",
       "vmClientNodeAcceleratedNetworking": "[parameters('vmClientNodeAcceleratedNetworking')]",
@@ -1968,8 +1975,8 @@
       "location": "[variables('location')]",
       "subnet": "[variables('networkSettings').subnet]",
       "subnetId": "[resourceId(variables('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', variables('networkSettings').name, variables('networkSettings').subnet.name)]",
-      "logAnalyticsId": "[parameters('logAnalyticsId')]",
-      "logAnalyticsKey": "[parameters('logAnalyticsKey')]",
+      "logAnalyticsId": "[parameters('logAnalyticsId')]", //Custom LAW
+      "logAnalyticsKey": "[parameters('logAnalyticsKey')]", //Custom LAW
       "credentials": {
         "adminUsername": "[parameters('adminUsername')]",
         "password": "[parameters('adminPassword')]",
