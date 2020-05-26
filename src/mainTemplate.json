@@ -1327,15 +1327,15 @@
   "variables": {
     "esVersionMajor": "[int(split(parameters('esVersion'), '.')[0])]",
     "esVersionMinor": "[int(split(parameters('esVersion'), '.')[1])]",
-    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
-    "networkTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('networks/virtual-network-resources.json', parameters('_artifactsLocationSasToken')))]",
+    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json'))]",
+    "networkTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('networks/virtual-network-resources.json'))]",
     "loadBalancerOptions": {
       "internal": "internal-lb-resources",
       "external": "external-lb-resources",
       "gateway": "[concat(toLower(parameters('appGatewayTier')),'-application-gateway-resources')]"
     },
-    "loadBalancerTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('loadbalancers/', variables('loadBalancerOptions')[parameters('loadBalancerType')],'.json', parameters('_artifactsLocationSasToken')))]",
-    "osSettingsTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('settings/ubuntuSettings.json', parameters('_artifactsLocationSasToken')))]",
+    "loadBalancerTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('loadbalancers/', variables('loadBalancerOptions')[parameters('loadBalancerType')],'.json'))]",
+    "osSettingsTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('settings/ubuntuSettings.json'))]",
     "location": "[parameters('location')]",
     "azureCloudStorageAccount": {
       "name": "[parameters('azureCloudStorageAccountName')]",
@@ -1998,7 +1998,7 @@
       "No": "empty/empty-kibana-ip-resources.json",
       "Yes": "empty/empty-kibana-ip-resources.json"
     },
-    "kibanaIpTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaIpTemplates')[variables('topologySettings').kibana], parameters('_artifactsLocationSasToken')))]"
+    "kibanaIpTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaIpTemplates')[variables('topologySettings').kibana]))]"
   },
   "resources": [
     {
