@@ -2,18 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "_artifactsLocation": {
+    "templateBaseUrl": {
       "type": "string",
       "metadata": {
-        "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        "description": "The base url for templates"
       }
-    },
-    "_artifactsLocationSasToken": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
-      },
-      "defaultValue": ""
     },
     "osSettings": {
       "type": "object",
@@ -54,13 +47,13 @@
       "No": "empty/empty-jumpbox-resources.json",
       "Yes": "machines/jumpbox-resources.json"
     },
-    "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplates')[parameters('topologySettings').jumpbox], parameters('_artifactsLocationSasToken')))]",
+    "jumpboxTemplateUrl": "[concat(parameters('templateBaseUrl'), variables('jumpboxTemplates')[parameters('topologySettings').jumpbox])]",
     "kibanaTemplates": {
       "No": "empty/empty-kibana-resources.json",
       "Yes": "machines/kibana-resources.json"
     },
-    "kibanaTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaTemplates')[parameters('topologySettings').kibana], parameters('_artifactsLocationSasToken')))]",
-    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/data-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+    "kibanaTemplateUrl": "[concat(parameters('templateBaseUrl'), variables('kibanaTemplates')[parameters('topologySettings').kibana])]",
+    "dataTemplateUrl": "[concat(parameters('templateBaseUrl'), 'machines/data-nodes-resources.json')]",
     "locations": {
       "eastus": {
         "platformFaultDomainCount": 3
@@ -160,7 +153,7 @@
       "Standard_M64",
       "Standard_M64m",
       "Standard_M128",
-      "Standard_M128m"
+      "Standard_M128m"    
     ],
     "vmNsgName": "[concat(parameters('commonVmSettings').namespacePrefix, 'standard-lb-nsg')]",
     "vmNsgProperties": [
@@ -198,15 +191,12 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/master-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('templateBaseUrl'), 'machines/master-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "_artifactsLocation": {
-            "value": "[parameters('_artifactsLocation')]"
-          },
-          "_artifactsLocationSasToken": {
-            "value": "[parameters('_artifactsLocationSasToken')]"
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
           },
           "vm": {
             "value": {
@@ -252,15 +242,12 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/client-nodes-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('templateBaseUrl'), 'machines/client-nodes-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "_artifactsLocation": {
-            "value": "[parameters('_artifactsLocation')]"
-          },
-          "_artifactsLocationSasToken": {
-            "value": "[parameters('_artifactsLocationSasToken')]"
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
           },
           "vm": {
             "value": {
@@ -268,7 +255,7 @@
               "namespace": "[concat(parameters('commonVmSettings').namespacePrefix, 'client-')]",
               "installScript": "[parameters('osSettings').extensionSettings.client]",
               "size": "[parameters('topologySettings').vmSizeClientNodes]",
-              "count": "[parameters('topologySettings').vmClientNodeCount]",
+              "count": "[int(parameters('topologySettings').vmClientNodeCount)]",
               "storageAccountType": "Standard_LRS",
               "backendPools": "[parameters('topologySettings').loadBalancerBackEndPools]",
               "imageReference": "[parameters('osSettings').imageReference]",
@@ -298,11 +285,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "_artifactsLocation": {
-            "value": "[parameters('_artifactsLocation')]"
-          },
-          "_artifactsLocationSasToken": {
-            "value": "[parameters('_artifactsLocationSasToken')]"
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
           },
           "vm": {
             "value": {
@@ -311,7 +295,7 @@
               "installScript": "[parameters('osSettings').extensionSettings.data]",
               "size": "[parameters('topologySettings').vmSizeDataNodes]",
               "storageAccountType": "[parameters('topologySettings').vmDataNodeStorageAccountType]",
-              "count": "[parameters('topologySettings').vmDataNodeCount]",
+              "count": "[int(parameters('topologySettings').vmDataNodeCount)]",
               "backendPools": "[parameters('topologySettings').dataLoadBalancerBackEndPools]",
               "imageReference": "[parameters('osSettings').imageReference]",
               "platformFaultDomainCount": "[variables('platformFaultDomainCount')]",
@@ -341,6 +325,9 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
+          },
           "credentials": {
             "value": "[parameters('commonVmSettings').credentials]"
           },
@@ -374,6 +361,9 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
+          },
           "credentials": {
             "value": "[parameters('commonVmSettings').credentials]"
           },
@@ -397,6 +387,12 @@
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
+          },
+          "logAnalyticsId": {
+            "value": "[parameters('commonVmSettings').logAnalyticsId]"
+          },
+          "logAnalyticsKey": {
+            "value": "[parameters('commonVmSettings').logAnalyticsKey]"
           }
         }
       }
@@ -410,31 +406,33 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('machines/logstash-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(parameters('templateBaseUrl'), 'machines/logstash-resources.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "_artifactsLocation": {
-            "value": "[parameters('_artifactsLocation')]"
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
           },
-          "_artifactsLocationSasToken": {
-            "value": "[parameters('_artifactsLocationSasToken')]"
+          "credentials": {
+            "value": "[parameters('commonVmSettings').credentials]"
           },
-          "vm": {
-            "value": {
-              "shared": "[parameters('commonVmSettings')]",
-              "namespace": "[concat(parameters('commonVmSettings').namespacePrefix, 'logstash-')]",
-              "installScript": "[parameters('osSettings').extensionSettings.logstash]",
-              "size": "[parameters('topologySettings').vmSizeLogstash]",
-              "storageAccountType": "Standard_LRS",
-              "count": "[parameters('topologySettings').vmLogstashCount]",
-              "backendPools": [],
-              "imageReference": "[parameters('osSettings').imageReference]",
-              "platformFaultDomainCount": "[variables('platformFaultDomainCount')]",
-              "acceleratedNetworking": "[if(equals(parameters('topologySettings').vmLogstashAcceleratedNetworking, 'Default'), if(contains(variables('vmAcceleratedNetworking'), parameters('topologySettings').vmSizeLogstash), 'Yes', 'No'), parameters('topologySettings').vmLogstashAcceleratedNetworking)]",
-              "nsg": "",
-              "standardInternalLoadBalancer": false
-            }
+          "location": {
+            "value": "[parameters('commonVmSettings').location]"
+          },
+          "namespace": {
+            "value": "[concat(parameters('commonVmSettings').namespacePrefix, 'logstash')]"
+          },
+          "networkSettings": {
+            "value": "[parameters('networkSettings')]"
+          },
+          "osSettings": {
+            "value": "[parameters('osSettings')]"
+          },
+          "vmSize": {
+            "value": "[parameters('topologySettings').vmSizeLogstash]"
+          },
+          "acceleratedNetworking": {
+            "value": "[if(equals(parameters('topologySettings').vmLogstashAcceleratedNetworking, 'Default'), if(contains(variables('vmAcceleratedNetworking'), parameters('topologySettings').vmSizeLogstash), 'Yes', 'No'), parameters('topologySettings').vmLogstashAcceleratedNetworking)]"
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"

@@ -23,16 +23,16 @@
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
     }
-  },
+  },  
   "variables": {
     "internalLoadBalancerName": "[concat(parameters('networkSettings').namespacePrefix, 'internal-lb')]"
   },
-  "resources": [
+    "resources": [
     {
       "apiVersion": "2019-04-01",
       "name": "[variables('internalLoadBalancerName')]",
       "type": "Microsoft.Network/loadBalancers",
-      "location": "[parameters('networkSettings').location]",
+      "location": "[parameters('networkSettings').location]",      
       "sku": {
         "name": "[parameters('networkSettings').internalSku]"
       },
