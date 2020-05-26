@@ -929,9 +929,8 @@
       }
     },
     "vmClientNodeCount": {
-      "type": "int",
-      "defaultValue": 0,
-      "minValue": 0,
+      "type": "string",
+      "defaultValue": "0",
       "metadata": {
         "description": "Number of Elasticsearch coordinating nodes to provision. A value of 0 puts the data nodes in the load balancer backend pool"
       }
