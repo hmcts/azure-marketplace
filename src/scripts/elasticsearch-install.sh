@@ -1124,6 +1124,15 @@ consul_registration_ip() {
         prod)
             echo 10.96.72.4
             ;;
+        perftest)
+            echo 10.112.136.4
+            ;;
+        ithc)
+            echo 10.112.8.4
+            ;;
+        ethosldata)
+            echo 10.14.8.4
+            ;;
         *)
             log "[configure_dns] ERROR '$CNP_ENV' is an unkown Consul target"
             # Add any missing environments
@@ -1148,21 +1157,24 @@ register_dns () {
     }
 EOF
 
-  log "[configure_dns] registering DNS, hostname: $hostname, IP: $ip, env: $CNP_ENV, env: $(consul_ip)"
+  log "[configure_dns] registering DNS, hostname: $hostname, IP: $ip, env: $CNP_ENV, env: $(consul_registration_ip)"
   log "[configure_dns] Consul DNS data: $(cat $tmp_file)"
-  curl -T "$tmp_file" "http://$(consul_ip):8500/v1/agent/service/register"
+  curl -T "$tmp_file" "http://$(consul_registration_ip):8500/v1/agent/service/register"
 
   rm $tmp_file
 }
-
 
 
 configure_os_properties()
 {
     log "[configure_os_properties] configuring operating system level configuration"
     # DNS Retry
+    log "[configure_dns] configuring DNS retry and search"
     echo "options timeout:10 attempts:5" >> /etc/resolvconf/resolv.conf.d/head
+    echo "search  service.core-compute-${CNP_ENV}.internal" >> /etc/resolvconf/resolv.conf.d/base
     resolvconf -u
+
+    register_dns $(hostname) $(hostname -I)
 
     # Required for bootstrap memory lock with systemd
     local SYSTEMD_OVERRIDES=/etc/systemd/system/elasticsearch.service.d
