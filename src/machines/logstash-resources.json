@@ -32,7 +32,8 @@
     }
   },
   "variables": {
-    "namespace": "[parameters('vm').namespace]"
+    "namespace": "[parameters('vm').namespace]",
+    "_artifactsLocation": "[concat(parameters('_artifactsLocation'), '/')]"
   },
   "resources": [
     {
@@ -65,7 +66,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('partials/vm.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(variables('_artifactsLocation'), 'partials/vm.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

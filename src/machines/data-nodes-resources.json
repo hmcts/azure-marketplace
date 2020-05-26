@@ -38,6 +38,7 @@
     }
   },
   "variables": {
+    "_artifactsLocation": "[concat(parameters('_artifactsLocation'), '/')]",
     "namespace": "[parameters('vm').namespace]",
     "avSetCount": "[add(div(sub(parameters('vm').count, 1), 100), 1)]",
     "diskCount": "[if(greater(parameters('storageSettings').dataDisks, 0), parameters('storageSettings').dataDisks, 1)]"
@@ -78,7 +79,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('partials/vm.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(variables('_artifactsLocation'), 'partials/vm.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -132,7 +133,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(parameters('_artifactsLocation'), concat('partials/vm.json', parameters('_artifactsLocationSasToken')))]",
+          "uri": "[concat(variables('_artifactsLocation'), 'partials/vm.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
