@@ -77,7 +77,6 @@
   "variables": {
     "namespace": "[parameters('namespace')]",
     "subnetId": "[resourceId(parameters('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', parameters('networkSettings').name, parameters('networkSettings').subnet.name)]",
-    "publicIpName": "[concat(variables('namespace'), '-ip')]",
     "securityGroupName": "[concat(variables('namespace'), '-nsg')]",
     "nicName": "[concat(variables('namespace'), '-nic')]",
     "password_osProfile": {
@@ -116,11 +115,11 @@
           {
             "name": "SSH",
             "properties": {
-              "description": "Allows inbound SSH traffic from anyone",
+              "description": "Allows inbound SSH traffic from VirtualNetwork",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "[parameters('osSettings').managementPort]",
-              "sourceAddressPrefix": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 100,
@@ -130,11 +129,11 @@
           {
             "name": "Kibana",
             "properties": {
-              "description": "Allows inbound Kibana traffic from anyone",
+              "description": "Allows inbound Kibana traffic from VirtualNetwork",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "5601",
-              "sourceAddressPrefix": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 200,
@@ -163,9 +162,6 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIpName'))]"
-              },
               "subnet": {
                 "id": "[variables('subnetId')]"
               }
