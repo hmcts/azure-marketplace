@@ -2136,9 +2136,6 @@
           "_artifactsLocation": {
             "value": "[parameters('_artifactsLocation')]"
           },
-          "_artifactsLocationSasToken": {
-            "value": "[parameters('_artifactsLocationSasToken')]"
-          },
           "esSettings": {
             "value": "[variables('esSettings')]"
           },
