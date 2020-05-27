@@ -526,6 +526,8 @@ install_kibana
 
 configure_kibana_yaml
 
+configure_os_properties
+
 configure_systemd
 
 start_systemd
