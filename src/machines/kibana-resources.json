@@ -103,6 +103,17 @@
   },
   "resources": [
     {
+      "name": "[concat(variables('namespace'), '-asg')]",
+      "type": "Microsoft.Network/applicationSecurityGroups",
+      "apiVersion": "2018-08-01",
+      "location": "[parameters('location')]",
+      "tags": {
+        "provider": "[toUpper(parameters('elasticTags').provider)]"
+      },
+      "properties": {
+      }
+    },
+    {
       "apiVersion": "2019-04-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('securityGroupName')]",
@@ -152,7 +163,8 @@
         "provider": "[toUpper(parameters('elasticTags').provider)]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]",
+        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), '-asg')]"
       ],
       "properties": {
         "primary": true,
@@ -164,7 +176,12 @@
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
                 "id": "[variables('subnetId')]"
-              }
+              },
+              "applicationSecurityGroups": [
+                {
+                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), '-asg'))]"
+                }
+              ]
             }
           }
         ],
