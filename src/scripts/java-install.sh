@@ -29,9 +29,14 @@ log()
 # Parameter handling
 #########################
 
-while getopts h optname; do
+ES_VERSION=""
+
+while getopts :v:h optname; do
     log "Option $optname set with value ${OPTARG}"
   case ${optname} in
+    v) #elasticsearch version number
+      ES_VERSION="${OPTARG}"
+      ;;
     h)  #show help
       help
       exit 2
@@ -55,4 +60,13 @@ install_java()
     log "installed java"
 }
 
-install_java
+log "updating apt-get"
+(apt-get -y update || (sleep 15; apt-get -y update)) > /dev/null
+log "updated apt-get"
+
+# Only install Java if not bundled with Elasticsearch
+if [[ -z "$ES_VERSION" || $(dpkg --compare-versions "$ES_VERSION" "lt" "7.0.0"; echo $?) -eq 0 ]]; then
+  install_java
+else
+  log "not installing java, using JDK bundled with distribution"
+fi
