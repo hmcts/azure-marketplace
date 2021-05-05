@@ -594,14 +594,6 @@
         "description": "The prefix to use for resources and hostnames when naming virtual machines in the cluster. Can be up to 5 characters in length, must begin with an alphanumeric character and can contain alphanumeric and hyphen characters. Hostnames are used for resolution of master nodes so if you are deploying a cluster into an existing virtual network containing an existing Elasticsearch cluster, be sure to set this to a unique prefix to differentiate the hostnames of this cluster from an existing cluster"
       }
     },
-    "cnpEnv": {
-      "type": "string",
-      "defaultValue": "",
-      "maxLength": 10,
-      "metadata": {
-        "description": "CNP environment into which we're building this cluster, e.g. sprod, aat"
-      }
-    },
     "vmSizeDataNodes": {
       "type": "string",
       "defaultValue": "Standard_DS1_v2",
@@ -741,8 +733,9 @@
       }
     },
     "vmDataDiskCount": {
-      "type": "string",
-      "defaultValue": "64",
+      "type": "int",
+      "defaultValue": 64,
+      "minValue": 0,
       "metadata": {
         "description": "Number of disks to attach to each data node in RAID 0 setup. If the number of disks selected is more than can be attached to the data node VM size, the maximum number of disks that can be attached will be used. If 1 disk is selected, it is not RAIDed. If 0 disks are selected, the temporary disk will be used to store Elasticsearch data. IMPORTANT: The temporary disk is ephemeral in nature so be sure you know the trade-offs when choosing 0 disks."
       }
@@ -768,8 +761,9 @@
       }
     },
     "vmDataNodeCount": {
-      "type": "string",
-      "defaultValue": "3",
+      "type": "int",
+      "defaultValue": 3,
+      "minValue": 1,
       "metadata": {
         "description": "Number of Elasticsearch data nodes"
       }
@@ -935,8 +929,9 @@
       }
     },
     "vmClientNodeCount": {
-      "type": "string",
-      "defaultValue": "0",
+      "type": "int",
+      "defaultValue": 0,
+      "minValue": 0,
       "metadata": {
         "description": "Number of Elasticsearch coordinating nodes to provision. A value of 0 puts the data nodes in the load balancer backend pool"
       }
@@ -1906,7 +1901,6 @@
       "vmDataNodeStorageAccountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "vmDataNodeAcceleratedNetworking": "[parameters('vmDataNodeAcceleratedNetworking')]",
       "vmHostNamePrefix": "[parameters('vmHostNamePrefix')]",
-      "cnpEnv": "[parameters('cnpEnv')]",
       "vmClientNodeCount": "[parameters('vmClientNodeCount')]",
       "vmSizeClientNodes": "[parameters('vmSizeClientNodes')]",
       "vmClientNodeAcceleratedNetworking": "[parameters('vmClientNodeAcceleratedNetworking')]",
@@ -1960,7 +1954,6 @@
     },
     "commonVmSettings": {
       "namespacePrefix": "[parameters('vmHostNamePrefix')]",
-      "cnpEnv": "[parameters('cnpEnv')]",
       "storageAccountName": "[concat('elastic', uniqueString(resourceGroup().id, deployment().name))]",
       "location": "[variables('location')]",
       "subnet": "[variables('networkSettings').subnet]",
@@ -1987,7 +1980,7 @@
     },
     "kibanaIpTemplates": {
       "No": "empty/empty-kibana-ip-resources.json",
-      "Yes": "empty/empty-kibana-ip-resources.json"
+      "Yes": "ips/kibana-ip-resources.json"
     },
     "kibanaIpTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('kibanaIpTemplates')[variables('topologySettings').kibana], parameters('_artifactsLocationSasToken')))]"
   },

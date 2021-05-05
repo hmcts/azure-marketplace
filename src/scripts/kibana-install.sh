@@ -80,7 +80,7 @@ HTTP_CACERT_PASSWORD=""
 SAML_SP_URI=""
 
 #Loop through options passed
-while getopts :n:v:u:S:C:K:P:Y:H:G:V:J:U:X:lh optname; do
+while getopts :n:v:u:S:C:K:P:Y:H:G:V:J:U:lh optname; do
   log "Option $optname set"
   case $optname in
     n) #set cluster name
@@ -125,9 +125,6 @@ while getopts :n:v:u:S:C:K:P:Y:H:G:V:J:U:X:lh optname; do
     Y) #kibana additional yml configuration
       YAML_CONFIGURATION="${OPTARG}"
       ;;
-    X) #CNP environment for DNS setup
-      CNP_ENV="${OPTARG}"
-      ;;
     h) #show help
       help
       exit 2
@@ -159,7 +156,7 @@ log "Kibana will talk to Elasticsearch over $ELASTICSEARCH_URL"
 #########################
 
 random_password()
-{ 
+{
   < /dev/urandom tr -dc '!@#$%_A-Z-a-z-0-9' | head -c${1:-64}
   echo
 }
@@ -182,7 +179,7 @@ create_keystore_if_not_exists()
     KEYSTORE_FILE=/etc/kibana/kibana.keystore
   fi
 
-  if [[ -f $KEYSTORE_FILE ]]; then 
+  if [[ -f $KEYSTORE_FILE ]]; then
     log "[create_keystore_if_not_exists] kibana.keystore exists at $KEYSTORE_FILE"
   else
     log "[create_keystore_if_not_exists] create kibana.keystore"
@@ -247,7 +244,7 @@ configure_kibana_yaml()
     else
       echo "elasticsearch.hosts: [\"$ELASTICSEARCH_URL\"]" >> $KIBANA_CONF
     fi
-    
+
     echo "server.host: $(hostname -i)" >> $KIBANA_CONF
     # specify kibana log location
     echo "logging.dest: /var/log/kibana.log" >> $KIBANA_CONF
@@ -265,7 +262,7 @@ configure_kibana_yaml()
       local KIBANA_USER="kibana"
       if dpkg --compare-versions "$KIBANA_VERSION" "ge" "7.8.0"; then
         KIBANA_USER="kibana_system"
-      fi 
+      fi
       echo "elasticsearch.username: $KIBANA_USER" >> $KIBANA_CONF
 
       # store credentials in the keystore
@@ -457,82 +454,6 @@ install_yamllint()
 {
     install_apt_package yamllint
 }
-I
-consul_registration_ip() {
-    case $CNP_ENV in
-        # TODO automate determining these IP addresses as they may change
-        # These are the IPs of the first node in the Consul cluster
-        sandbox)
-            echo 10.100.136.5
-            ;;
-        saat)
-            echo 10.100.72.4
-            ;;
-        sprod)
-            echo 10.100.8.7
-            ;;
-        demo)
-            echo 10.96.200.4
-            ;;
-        aat)
-            echo 10.96.136.7
-            ;;
-        prod)
-            echo 10.96.72.4
-            ;;
-        perftest)
-            echo 10.112.136.4
-            ;;
-        ithc)
-            echo 10.112.8.4
-            ;;
-        ethosldata)
-            echo 10.14.8.4
-            ;;
-        *)
-            log "[configure_dns] ERROR '$CNP_ENV' is an unkown Consul target"
-            # Add any missing environments
-            echo ""
-            ;;
-    esac
-}
-
-
-register_dns () {
-  hostname=$1
-  ip=$2
-
-  tmp_file=$(mktemp)
-  cat > $tmp_file <<-EOF
-    {
-    "ID": "$hostname",
-    "Name": "$hostname",
-    "Tags": [],
-    "Address": "$ip",
-    "Port": 443
-    }
-EOF
-
-  log "[configure_dns] registering DNS, hostname: $hostname, IP: $ip, env: $CNP_ENV, env: $(consul_registration_ip)"
-  log "[configure_dns] Consul DNS data: $(cat $tmp_file)"
-  curl -T "$tmp_file" "http://$(consul_registration_ip):8500/v1/agent/service/register"
-
-  rm $tmp_file
-}
-configure_os_properties()
-{
-    log "[configure_os_properties] configuring operating system level configuration"
-
-    # DNS Retry
-    log "[configure_dns] configuring DNS retry and search"
-    echo "options timeout:10 attempts:5" >> /etc/resolvconf/resolv.conf.d/head
-    echo "search  service.core-compute-${CNP_ENV}.internal" >> /etc/resolvconf/resolv.conf.d/base
-    resolvconf -u
-
-    register_dns $(hostname) $(hostname -I)
-
-    log "[configure_os_properties] configured operating system level configuration"
-}
 
 configure_systemd()
 {
@@ -577,8 +498,6 @@ log "[apt-get] updated apt-get"
 install_kibana
 
 configure_kibana_yaml
-
-configure_os_properties
 
 configure_systemd
 

@@ -106,8 +106,6 @@
       "[uri(parameters('_artifactsLocation'), concat('scripts/kibana-install.sh', parameters('_artifactsLocationSasToken')))]",
       "[uri(parameters('_artifactsLocation'), concat('scripts/logstash-install.sh', parameters('_artifactsLocationSasToken')))]",
       "[uri(parameters('_artifactsLocation'), concat('scripts/vm-disk-utils-0.1.sh', parameters('_artifactsLocationSasToken')))]",
-      "[uri(parameters('_artifactsLocation'), concat('scripts/custom-install.sh', parameters('_artifactsLocationSasToken')))]",
-      "[uri(parameters('_artifactsLocation'), concat('scripts/elasticsearch.conf', parameters('_artifactsLocationSasToken')))]",
       "[uri(parameters('_artifactsLocation'), concat('scripts/java-install.sh', parameters('_artifactsLocationSasToken')))]"
     ],
     "ubuntuSettings": {
