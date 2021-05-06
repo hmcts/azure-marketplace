@@ -38,6 +38,8 @@
     }
   },
   "variables": {
+    "kibanaNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'kibana-')]",
+    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster-')]",
     "namespace": "[parameters('vm').namespace]",
     "avSetCount": "[add(div(sub(parameters('vm').count, 1), 100), 1)]",
     "diskCount": "[if(greater(parameters('storageSettings').dataDisks, 0), parameters('storageSettings').dataDisks, 1)]"
@@ -66,7 +68,7 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "ccd-cluster-nsg",
+      "name": "[concat(variables('clusterNamespace'), '-nsg')]",
       "location": "[parameters('vm').shared.location]",
       "dependsOn": [
         "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
@@ -125,7 +127,7 @@
               "destinationPortRanges": ["9200", "9300"],
               "sourceApplicationSecurityGroups": [
                 {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', 'ccd-kibana-asg')]"
+                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('kibanaNamespace'), 'asg'))]"
                 }
               ],
               "destinationApplicationSecurityGroups": [

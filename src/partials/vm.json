@@ -41,6 +41,7 @@
   },
   "variables": {
     "namespace": "[parameters('vm').namespace]",
+    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster-')]",
     "computername": "[concat(parameters('vm').namespace, parameters('index'))]",
     "password_osProfile": {
       "computername": "[variables('computername')]",
@@ -124,7 +125,7 @@
         "primary": true,
         "enableAcceleratedNetworking": "[equals(parameters('vm').acceleratedNetworking, 'Yes')]",
         "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'ccd-cluster-nsg')]"
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '[concat(variables('clusterNamespace'), '-nsg')]')]"
         },
         "ipConfigurations": [
           {
