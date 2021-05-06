@@ -118,20 +118,6 @@
             }
           },
           {
-            "name": "ConsulDNSPassthrough",
-            "properties": {
-              "description": "Allows ElasticSeach nodes to register their with Consul DNS",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRange": "8500",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 130,
-              "direction": "Inbound"
-            }
-          },
-          {
             "name": "Kibana_to_Nodes",
             "properties": {
               "description": "Allows Kibana to see the cluster nodes for monitoring",
