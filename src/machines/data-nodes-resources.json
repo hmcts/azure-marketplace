@@ -69,8 +69,7 @@
       "name": "ccd-cluster-nsg",
       "location": "[parameters('vm').shared.location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]",
-        "[resourceId('Microsoft.Network/applicationSecurityGroups/', 'ccd-logstash-asg')]"
+        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
       ],
       "tags": {
         "provider": "[toUpper(parameters('elasticTags').provider)]"
@@ -140,28 +139,6 @@
             }
           },
           {
-            "name": "Logstash_to_Nodes",
-            "properties": {
-              "description": "Allow Logstash to query the cluster nodes directly for loading data",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRange": "9200",
-              "sourceApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', 'ccd-logstash-asg')]"
-                }
-              ],
-              "destinationApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), 'asg'))]"
-                }
-              ],
-              "access": "Allow",
-              "priority": 150,
-              "direction": "Inbound"
-            }
-          },
-          {
             "name": "LB_To_ES",
             "properties": {
               "description": "Allows ElasticSeach queries from the LoadBalancer.  Needed for LoadBalancer healthchecks.",
@@ -198,16 +175,6 @@
     },
     {
       "name": "[concat(variables('namespace'), 'asg')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2018-08-01",
-      "location": "[parameters('vm').shared.location]",
-      "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
-      },
-      "properties": {}
-    },
-    {
-      "name": "ccd-logstash-asg",
       "type": "Microsoft.Network/applicationSecurityGroups",
       "apiVersion": "2018-08-01",
       "location": "[parameters('vm').shared.location]",
