@@ -1870,7 +1870,7 @@
       "[variables('lbBackEndPoolsAdded')]",
       "[variables('lbBackEndPoolsRemoved')]"
     ],
-    "clientResourceIndex": "[mod(add(int(parameters('vmClientNodeCount')),2),add(int(parameters('vmClientNodeCount')),1))]",
+    "clientResourceIndex": "[mod(add(parameters('vmClientNodeCount'),2),add(parameters('vmClientNodeCount'),1))]",
     "storageAccountOverrides": {
       "Default": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "Standard": "Standard_LRS"
@@ -1878,7 +1878,7 @@
     "resolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('storageAccountType')]]",
     "tmpVmSizeDataDisks": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks]",
     "dataDiskOptions": [
-      "[int(parameters('vmDataDiskCount'))]",
+      "[(parameters('vmDataDiskCount')]",
       "[variables('tmpVmSizeDataDisks')]"
     ],
     "resolvedDataDiskCount": "[min(variables('dataDiskOptions'))]",
