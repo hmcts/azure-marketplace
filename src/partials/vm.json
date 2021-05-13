@@ -125,7 +125,7 @@
         "primary": true,
         "enableAcceleratedNetworking": "[equals(parameters('vm').acceleratedNetworking, 'Yes')]",
         "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '[concat(variables('clusterNamespace'), '-nsg')]')]"
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('clusterNamespace'), '-nsg'))]"
         },
         "ipConfigurations": [
           {
