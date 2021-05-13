@@ -1878,7 +1878,7 @@
     "resolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('storageAccountType')]]",
     "tmpVmSizeDataDisks": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks]",
     "dataDiskOptions": [
-      "[(parameters('vmDataDiskCount')]",
+      "[parameters('vmDataDiskCount')]",
       "[variables('tmpVmSizeDataDisks')]"
     ],
     "resolvedDataDiskCount": "[min(variables('dataDiskOptions'))]",
