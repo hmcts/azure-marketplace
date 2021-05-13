@@ -734,7 +734,7 @@
     },
     "vmDataDiskCount": {
       "type": "string",
-      "defaultValue": 64,
+      "defaultValue": "64",
       "metadata": {
         "description": "Number of disks to attach to each data node in RAID 0 setup. If the number of disks selected is more than can be attached to the data node VM size, the maximum number of disks that can be attached will be used. If 1 disk is selected, it is not RAIDed. If 0 disks are selected, the temporary disk will be used to store Elasticsearch data. IMPORTANT: The temporary disk is ephemeral in nature so be sure you know the trade-offs when choosing 0 disks."
       }
@@ -761,7 +761,7 @@
     },
     "vmDataNodeCount": {
       "type": "string",
-      "defaultValue": 3,
+      "defaultValue": "3",
       "metadata": {
         "description": "Number of Elasticsearch data nodes"
       }
@@ -928,7 +928,7 @@
     },
     "vmClientNodeCount": {
       "type": "string",
-      "defaultValue": 0,
+      "defaultValue": "0",
       "metadata": {
         "description": "Number of Elasticsearch coordinating nodes to provision. A value of 0 puts the data nodes in the load balancer backend pool"
       }
