@@ -1309,6 +1309,7 @@
     }
   },
   "variables": {
+    "vmClientNodeCount": "[int(parameters('vmClientNodeCount'))]",
     "esVersionMajor": "[int(split(parameters('esVersion'), '.')[0])]",
     "esVersionMinor": "[int(split(parameters('esVersion'), '.')[1])]",
     "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
@@ -1898,7 +1899,7 @@
       "vmDataNodeStorageAccountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "vmDataNodeAcceleratedNetworking": "[parameters('vmDataNodeAcceleratedNetworking')]",
       "vmHostNamePrefix": "[parameters('vmHostNamePrefix')]",
-      "vmClientNodeCount": "[parameters('vmClientNodeCount')]",
+      "vmClientNodeCount": "[variables('vmClientNodeCount')]",
       "vmSizeClientNodes": "[parameters('vmSizeClientNodes')]",
       "vmClientNodeAcceleratedNetworking": "[parameters('vmClientNodeAcceleratedNetworking')]",
       "vNetLoadBalancerIp": "[variables('vNetLoadBalancerIp')]",
