@@ -41,7 +41,7 @@
   },
   "variables": {
     "namespace": "[parameters('vm').namespace]",
-    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster-')]",
+    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster')]",
     "computername": "[concat(parameters('vm').namespace, parameters('index'))]",
     "password_osProfile": {
       "computername": "[variables('computername')]",

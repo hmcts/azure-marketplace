@@ -38,7 +38,7 @@
     }
   },
   "variables": {
-    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster-')]",
+    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster')]",
     "namespace": "[parameters('vm').namespace]",
     "avSetCount": "[add(div(sub(parameters('vm').count, 1), 100), 1)]",
     "diskCount": "[if(greater(parameters('storageSettings').dataDisks, 0), parameters('storageSettings').dataDisks, 1)]"
