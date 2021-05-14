@@ -38,7 +38,6 @@
     }
   },
   "variables": {
-    "kibanaNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'kibana-')]",
     "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster-')]",
     "namespace": "[parameters('vm').namespace]",
     "avSetCount": "[add(div(sub(parameters('vm').count, 1), 100), 1)]",
@@ -68,7 +67,7 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[concat(variables('clusterNamespace'), '-nsg')]",
+      "name": "[concat(variables('clusterNamespace'), 'nsg')]",
       "location": "[parameters('vm').shared.location]",
       "dependsOn": [
         "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
@@ -115,28 +114,6 @@
               ],
               "access": "Allow",
               "priority": 120,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Kibana_to_Nodes",
-            "properties": {
-              "description": "Allows Kibana to see the cluster nodes for monitoring",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRanges": ["9200", "9300"],
-              "sourceApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('kibanaNamespace'), 'asg'))]"
-                }
-              ],
-              "destinationApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), 'asg'))]"
-                }
-              ],
-              "access": "Allow",
-              "priority": 140,
               "direction": "Inbound"
             }
           },
