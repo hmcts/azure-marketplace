@@ -67,7 +67,7 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[concat(variables('clusterNamespace'), 'nsg')]",
+      "name": "[concat(variables('clusterNamespace'), '-nsg')]",
       "location": "[parameters('vm').shared.location]",
       "dependsOn": [
         "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
