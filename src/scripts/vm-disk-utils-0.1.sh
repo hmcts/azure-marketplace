@@ -210,8 +210,6 @@ do_partition() {
         echo "n
 p
 1
-
-
 t
 ${_type}
 w"| fdisk "${_disk}"

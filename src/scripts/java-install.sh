@@ -51,9 +51,6 @@ done
 
 install_java()
 {
-    log "updating apt-get"
-    (apt-get -y update || (sleep 15; apt-get -y update)) > /dev/null
-    log "updated apt-get"
     log "installing java"
     (apt-get -yq install openjdk-8-jdk || (sleep 15; apt-get -yq install openjdk-8-jdk))
     command -v java >/dev/null 2>&1 || { log "java did not get installed" >&2; exit 50; }
