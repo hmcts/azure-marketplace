@@ -156,7 +156,7 @@ log "Kibana will talk to Elasticsearch over $ELASTICSEARCH_URL"
 #########################
 
 random_password()
-{ 
+{
   < /dev/urandom tr -dc '!@#$%_A-Z-a-z-0-9' | head -c${1:-64}
   echo
 }
@@ -179,7 +179,7 @@ create_keystore_if_not_exists()
     KEYSTORE_FILE=/etc/kibana/kibana.keystore
   fi
 
-  if [[ -f $KEYSTORE_FILE ]]; then 
+  if [[ -f $KEYSTORE_FILE ]]; then
     log "[create_keystore_if_not_exists] kibana.keystore exists at $KEYSTORE_FILE"
   else
     log "[create_keystore_if_not_exists] create kibana.keystore"
@@ -244,7 +244,7 @@ configure_kibana_yaml()
     else
       echo "elasticsearch.hosts: [\"$ELASTICSEARCH_URL\"]" >> $KIBANA_CONF
     fi
-    
+
     echo "server.host: $(hostname -i)" >> $KIBANA_CONF
     # specify kibana log location
     echo "logging.dest: /var/log/kibana.log" >> $KIBANA_CONF
@@ -262,7 +262,7 @@ configure_kibana_yaml()
       local KIBANA_USER="kibana"
       if dpkg --compare-versions "$KIBANA_VERSION" "ge" "7.8.0"; then
         KIBANA_USER="kibana_system"
-      fi 
+      fi
       echo "elasticsearch.username: $KIBANA_USER" >> $KIBANA_CONF
 
       # store credentials in the keystore
