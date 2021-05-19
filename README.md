@@ -892,6 +892,12 @@ Parameters such as <code>esHttpCertBlob</code> and <code>kibanaCertBlob</code> m
         "esHttpCertBlob"= $httpCert
     }
     ```
+## Additional changes for HMCTS
+ - Creates NSGs with custom security rules limiting inbound traffic to vnet, Removes public ip address from load balancer.
+ - Add OMS extension to nodes
+ - Few int parameters like `vmDataNodeCount` are changed to String to be able to pass from terraform (Terraform passes everything as strings when calling ARM).
+ - Disables Basic Security with a hack ( to be fixed)
+
 
 ## License
 
