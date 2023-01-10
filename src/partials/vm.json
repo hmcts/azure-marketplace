@@ -40,7 +40,13 @@
       "defaultValue": {
         "provider": "648D2193-0CE0-4EFB-8A82-AF9792184FD9"
       },
+    "tags": {
+      "type": "object",
       "metadata": {
+              "description" : "Resource tags"
+      }
+    },
+    "metadata": {
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
     }
@@ -77,7 +83,7 @@
       "name": "[concat(variables('namespace'), parameters('index'), '-nic')]",
       "location": "[parameters('vm').shared.location]",
       "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
+        "value":"[parameters('tags')]" 
       },
       "properties": {
         "primary": true,

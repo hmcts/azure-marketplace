@@ -1274,7 +1274,22 @@
       "metadata": {
         "description": "Log Anytics Key. Used by VMs for logging."
       }
-    }
+    },
+    "application": {
+      "type": "string"
+   },
+   "builtFrom": {
+       "type": "string"
+   },
+   "businessArea": {
+        "type": "string"
+   },
+   "criticality": {
+         "type": "string"
+   },
+   "environment": {
+          "type": "string"
+   }
   },
   "variables": {
     "templateBaseUrl": "[concat(parameters('artifactsBaseUrl'), '/')]",
@@ -2104,7 +2119,16 @@
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
-          }
+          },
+          "tags": {
+            "application":"[parameters('application')]", 
+            "builtFrom":"[parameters('builtFrom')]", 
+            "businessArea":"[parameters('businessArea')]", 
+            "criticality":"[parameters('criticality')]", 
+            "environment":"[parameters('environment')]"
+         }
+
+          
         }
       }
     }

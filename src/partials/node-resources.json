@@ -14,6 +14,12 @@
         "description": "Operating system settings"
       }
     },
+    "tags": {
+      "type": "object",
+      "metadata": {
+          "description" : "Resource tags"
+      }
+  },
     "commonVmSettings": {
       "type": "object",
       "metadata": {
@@ -311,6 +317,9 @@
               "acceleratedNetworking": "[if(equals(parameters('topologySettings').vmMasterNodeAcceleratedNetworking, 'Default'), if(contains(variables('vmAcceleratedNetworking'), parameters('topologySettings').vmSizeMasterNodes), 'Yes', 'No'), parameters('topologySettings').vmMasterNodeAcceleratedNetworking)]"
             }
           },
+          "tags": {
+            "value":"[parameters('tags')]" 
+          },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
           }
@@ -347,6 +356,9 @@
               "platformFaultDomainCount": "[variables('platformFaultDomainCount')]",
               "acceleratedNetworking": "[if(equals(parameters('topologySettings').vmClientNodeAcceleratedNetworking, 'Default'), if(contains(variables('vmAcceleratedNetworking'), parameters('topologySettings').vmSizeClientNodes), 'Yes', 'No'), parameters('topologySettings').vmClientNodeAcceleratedNetworking)]"
             }
+          },
+          "tags": {
+            "value":"[parameters('tags')]" 
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
@@ -386,6 +398,9 @@
           },
           "storageSettings": {
             "value": "[parameters('topologySettings').dataNodeStorageSettings]"
+          },
+          "tags": {
+            "value":"[parameters('tags')]" 
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"

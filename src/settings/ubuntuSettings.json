@@ -14,6 +14,12 @@
             "description" : "The Elasticsearch settings"
         }
     },
+    "tags": {
+      "type": "object",
+      "metadata": {
+          "description" : "Resource tags"
+      }
+  },
     "commonVmSettings": {
         "type": "object",
         "metadata": {
@@ -206,6 +212,9 @@
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
+          },
+          "tags": {
+            "value":"[parameters('tags')]" 
           }
         }
       }
