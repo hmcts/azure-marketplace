@@ -1284,9 +1284,6 @@
    "businessArea": {
         "type": "string"
    },
-   "criticality": {
-         "type": "string"
-   },
    "environment": {
           "type": "string"
    }
@@ -2124,7 +2121,6 @@
             "application":"[parameters('application')]", 
             "builtFrom":"[parameters('builtFrom')]", 
             "businessArea":"[parameters('businessArea')]", 
-            "criticality":"[parameters('criticality')]", 
             "environment":"[parameters('environment')]"
          }
 
