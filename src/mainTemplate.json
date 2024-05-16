@@ -1936,7 +1936,7 @@
       "logstashKeystorePwd": "[if(not(empty(parameters('logstashKeystorePassword'))),parameters('logstashKeystorePassword'),uniqueString(resourceGroup().id, deployment().name, parameters('securityLogstashPassword')))]",
       "jumpbox": "[parameters('jumpbox')]",
       "dataNodeStorageSettings": {
-        "dataAccountType": "[variables('dataResolvedStorageAccountType')]",
+        "dataAccountType": "[variables('resolvedStorageAccountType')]",
         "accountType": "[variables('resolvedStorageAccountType')]",
         "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]",
         "dataDisks": "[variables('resolvedDataDiskCount')]"
