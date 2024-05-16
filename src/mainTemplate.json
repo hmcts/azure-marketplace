@@ -775,7 +775,18 @@
         "Standard"
       ],
       "metadata": {
-        "description": "The storage account type of the attached managed disks and OS disks (Default or Standard). The Default storage account type will be Premium Storage for VMs that support Premium Storage and Standard HDD Storage for those that do not."
+        "description": "The storage account type of the attached OS disks (Default or Standard). The Default storage account type will be Premium Storage for VMs that support Premium Storage and Standard HDD Storage for those that do not."
+      }
+    },
+    "dataStorageAccountType": {
+      "type": "string",
+      "defaultValue": "Default",
+      "allowedValues": [
+        "Default",
+        "Standard"
+      ],
+      "metadata": {
+        "description": "The storage account type of the attached managed disks (Default or Standard). The Default storage account type will be Premium Storage for VMs that support Premium Storage and Standard HDD Storage for those that do not."
       }
     },
     "dataNodesAreMasterEligible": {
@@ -1871,9 +1882,10 @@
     "clientResourceIndex": "[mod(add(int(parameters('vmClientNodeCount')),2),add(int(parameters('vmClientNodeCount')),1))]",
     "storageAccountOverrides": {
       "Default": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
-      "Standard": "Standard_LRS"
+      "Standard": "StandardSSD_LRS"
     },
     "resolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('storageAccountType')]]",
+    "dataResolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('dataStorageAccountType')]]",
     "tmpVmSizeDataDisks": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks]",
     "dataDiskOptions": [
       "[int(parameters('vmDataDiskCount'))]",
@@ -1924,6 +1936,7 @@
       "logstashKeystorePwd": "[if(not(empty(parameters('logstashKeystorePassword'))),parameters('logstashKeystorePassword'),uniqueString(resourceGroup().id, deployment().name, parameters('securityLogstashPassword')))]",
       "jumpbox": "[parameters('jumpbox')]",
       "dataNodeStorageSettings": {
+        "dataAccountType": "[variables('dataResolvedStorageAccountType')]",
         "accountType": "[variables('resolvedStorageAccountType')]",
         "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]",
         "dataDisks": "[variables('resolvedDataDiskCount')]"
