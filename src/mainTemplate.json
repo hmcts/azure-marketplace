@@ -778,17 +778,6 @@
         "description": "The storage account type of the attached OS disks (Default or Standard). The Default storage account type will be Premium Storage for VMs that support Premium Storage and Standard HDD Storage for those that do not."
       }
     },
-    "dataStorageAccountType": {
-      "type": "string",
-      "defaultValue": "Default",
-      "allowedValues": [
-        "Default",
-        "Standard"
-      ],
-      "metadata": {
-        "description": "The storage account type of the attached managed disks (Default or Standard). The Default storage account type will be Premium Storage for VMs that support Premium Storage and Standard HDD Storage for those that do not."
-      }
-    },
     "dataNodesAreMasterEligible": {
       "type": "string",
       "defaultValue": "No",
