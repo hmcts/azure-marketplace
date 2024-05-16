@@ -1885,7 +1885,6 @@
       "Standard": "StandardSSD_LRS"
     },
     "resolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('storageAccountType')]]",
-    "dataResolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('dataStorageAccountType')]]",
     "tmpVmSizeDataDisks": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks]",
     "dataDiskOptions": [
       "[int(parameters('vmDataDiskCount'))]",
