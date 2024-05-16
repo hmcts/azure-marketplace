@@ -1871,7 +1871,7 @@
     "clientResourceIndex": "[mod(add(int(parameters('vmClientNodeCount')),2),add(int(parameters('vmClientNodeCount')),1))]",
     "storageAccountOverrides": {
       "Default": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
-      "Standard": "StandardSSD_LRS"
+      "Standard": "Standard_LRS"
     },
     "resolvedStorageAccountType": "[variables('storageAccountOverrides')[parameters('storageAccountType')]]",
     "tmpVmSizeDataDisks": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks]",
