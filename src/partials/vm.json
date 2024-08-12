@@ -178,7 +178,7 @@
       "tags": {
         "provider": "[toUpper(parameters('elasticTags').provider)]",
         "autoShutdown": "[if(not(equals(parameters('environment'), 'prod')), 'true', 'false')]",
-        "startupMode": "[if(not(equals(parameters('environment'), 'prod')), 'true', 'false')]",
+        "startupMode": "[if(not(equals(parameters('environment'), 'prod')), 'always', 'false')]",
         "environment": "[parameters('environment')]"
       },
       "dependsOn": [
