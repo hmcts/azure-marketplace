@@ -35,6 +35,34 @@
       "metadata": {
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
+    },
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "demo",
+        "aat",
+        "ithc",
+        "perftest"
+
+      ],
+      "defaultValue": "dev",
+      "metadata": {
+        "description": "The environment for deployment"
+      }
+    },
+    "autoShutdown": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Auto shutdown setting"
+      }
+    },
+    "startupMode" : {
+      "type": "string",
+      "defaultValue": "always",
+      "metadata": {
+        "description": "Startup mode"
+      }
     }
   },
   "variables": {
@@ -247,7 +275,18 @@
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
+          },
+          "environment": {
+            "value": "[parameters('environment')]"
+          },
+          "autoShutdown": {
+            "value": "[parameters('autoShutdown')]"
+          },
+          "startupMode": {
+            "value": "[parameters('startupMode')]"
           }
+        }
+      }
         }
       }
     }

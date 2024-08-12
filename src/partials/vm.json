@@ -37,6 +37,30 @@
       "metadata": {
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
+    },
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "dev",
+        "test"
+      ],
+      "defaultValue": "dev",
+      "metadata": {
+        "description": "The environment for deployment"
+      }
+    },
+    "autoShutdown": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Auto shutdown setting"
+      }
+    },
+    "startupMode": {
+      "type": "string",
+      "metadata": {
+        "description": "Startup mode"
+      }
     }
   },
   "variables": {
@@ -152,7 +176,10 @@
       "name": "[concat(variables('namespace'), parameters('index'))]",
       "location": "[parameters('vm').shared.location]",
       "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
+        "provider": "[toUpper(parameters('elasticTags').provider)]",
+        "autoShutdown": "[if(not(equals(parameters('environment'), 'prod')), parameters('autoShutdown'), json('false'))]",
+        "startupMode": "[if(not(equals(parameters('environment'), 'prod')), parameters('startupMode'), json('false'))]",
+        "environment": "[parameters('environment')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('namespace'), parameters('index'), '-nic')]"
