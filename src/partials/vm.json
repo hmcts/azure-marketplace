@@ -51,7 +51,6 @@
     },
     "autoShutdown": {
       "type": "string",
-      "defaultValue": "true",
       "metadata": {
         "description": "Auto shutdown setting"
       }
