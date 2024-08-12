@@ -177,8 +177,8 @@
       "location": "[parameters('vm').shared.location]",
       "tags": {
         "provider": "[toUpper(parameters('elasticTags').provider)]",
-        "autoShutdown": "[if(not(equals(parameters('environment'), 'prod')), parameters('autoShutdown'), json('false'))]",
-        "startupMode": "[if(not(equals(parameters('environment'), 'prod')), parameters('startupMode'), json('false'))]",
+        "autoShutdown": "[if(not(equals(parameters('environment'), 'prod')), parameters('autoShutdown'), 'false')]",
+        "startupMode": "[if(not(equals(parameters('environment'), 'prod')), parameters('startupMode'), 'false')]",
         "environment": "[parameters('environment')]"
       },
       "dependsOn": [
