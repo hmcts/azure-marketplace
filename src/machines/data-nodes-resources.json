@@ -52,14 +52,12 @@
     },
     "autoShutdown": {
       "type": "string",
-      "defaultValue": "true",
       "metadata": {
         "description": "Auto shutdown setting"
       }
     },
     "startupMode" : {
       "type": "string",
-      "defaultValue": "always",
       "metadata": {
         "description": "Startup mode"
       }
