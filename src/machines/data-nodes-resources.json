@@ -32,8 +32,11 @@
      "environment": {
       "type": "string",
       "allowedValues": [
-        "dev",
-        "test"
+        "demo",
+        "aat",
+        "ithc",
+        "perftest"
+
       ],
       "defaultValue": "dev",
       "metadata": {
