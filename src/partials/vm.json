@@ -60,6 +60,12 @@
       "metadata": {
         "description": "Startup mode"
       }
+    },
+      "tag": {
+      "type": "string",
+      "metadata": {
+        "description": "Startup mode"
+      }
     }
   },
   "variables": {

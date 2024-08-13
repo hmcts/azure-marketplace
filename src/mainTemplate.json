@@ -1318,7 +1318,14 @@
       "metadata": {
         "description": "Log Anytics Key. Used by VMs for logging."
       }
+    },
+    "tags": {
+    "type": "object",
+    "defaultValue": {},
+    "metadata": {
+      "description": "Tags to be applied to the resources."
     }
+  }
   },
   "variables": {
     "esVersionMajor": "[int(split(parameters('esVersion'), '.')[0])]",
@@ -2166,6 +2173,9 @@
           },
           "elasticTags": {
             "value": "[parameters('elasticTags')]"
+          },
+          "tags": {
+            "value": "[parameters('tags')]"
           }
         }
       }
