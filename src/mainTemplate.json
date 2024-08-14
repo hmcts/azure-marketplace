@@ -1320,11 +1320,11 @@
       }
     },
     "tags": {
-    "type": "object",
-    "defaultValue": {},
-    "metadata": {
-      "description": "Tags to be applied to the resources."
-    }
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to be applied to the resources."
+      }
   }
   },
   "variables": {
