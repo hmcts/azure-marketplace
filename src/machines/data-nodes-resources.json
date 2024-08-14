@@ -1,12 +1,19 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "templateBaseUrl": {
+    "_artifactsLocation": {
       "type": "string",
       "metadata": {
         "description": "Base uri of resources"
       }
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+      },
+      "defaultValue": ""
     },
     "vm": {
       "type": "object",
@@ -31,13 +38,14 @@
     }
   },
   "variables": {
+    "clusterNamespace": "[concat(parameters('vm').shared.namespacePrefix, 'cluster')]",
     "namespace": "[parameters('vm').namespace]",
     "avSetCount": "[add(div(sub(parameters('vm').count, 1), 100), 1)]",
     "diskCount": "[if(greater(parameters('storageSettings').dataDisks, 0), parameters('storageSettings').dataDisks, 1)]"
   },
   "resources": [
     {
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[concat(variables('namespace'), copyindex(), '-av-set')]",
       "location": "[parameters('vm').shared.location]",
@@ -59,11 +67,10 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "ccd-cluster-nsg",
+      "name": "[concat(variables('clusterNamespace'), '-nsg')]",
       "location": "[parameters('vm').shared.location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]",
-        "[resourceId('Microsoft.Network/applicationSecurityGroups/', 'ccd-logstash-asg')]"
+        "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
       ],
       "tags": {
         "provider": "[toUpper(parameters('elasticTags').provider)]"
@@ -107,64 +114,6 @@
               ],
               "access": "Allow",
               "priority": 120,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "ConsulDNSPassthrough",
-            "properties": {
-              "description": "Allows ElasticSeach nodes to register their with Consul DNS",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRange": "8500",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 130,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Kibana_to_Nodes",
-            "properties": {
-              "description": "Allows Kibana to see the cluster nodes for monitoring",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRanges": ["9200", "9300"],
-              "sourceApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', 'ccd-kibana-asg')]"
-                }
-              ],
-              "destinationApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), 'asg'))]"
-                }
-              ],
-              "access": "Allow",
-              "priority": 140,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Logstash_to_Nodes",
-            "properties": {
-              "description": "Allow Logstash to query the cluster nodes directly for loading data",
-              "protocol": "TCP",
-              "sourcePortRange": "*",
-              "destinationPortRange": "9200",
-              "sourceApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', 'ccd-logstash-asg')]"
-                }
-              ],
-              "destinationApplicationSecurityGroups": [
-                {
-                  "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', concat(variables('namespace'), 'asg'))]"
-                }
-              ],
-              "access": "Allow",
-              "priority": 150,
               "direction": "Inbound"
             }
           },
@@ -214,20 +163,10 @@
       "properties": {}
     },
     {
-      "name": "ccd-logstash-asg",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2018-08-01",
-      "location": "[parameters('vm').shared.location]",
-      "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
-      },
-      "properties": {}
-    },
-    {
       "condition": "[greater(parameters('storageSettings').dataDisks, 0)]",
       "name": "[concat(variables('namespace'), copyindex(), '-vm-creation')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2019-05-01",
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('namespace'), mod(copyindex(),variables('avSetCount')), '-av-set')]",
         "[concat('Microsoft.Network/applicationSecurityGroups/', variables('namespace'), 'asg')]"
@@ -239,13 +178,10 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('templateBaseUrl'), '/partials/vm.json')]",
+          "uri": "[uri(parameters('_artifactsLocation'), concat('partials/vm.json', parameters('_artifactsLocationSasToken')))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "templateBaseUrl": {
-            "value": "[parameters('templateBaseUrl')]"
-          },
           "vm": {
             "value": "[parameters('vm')]"
           },
@@ -266,7 +202,7 @@
                     "diskSizeGB": "[parameters('storageSettings').diskSize]",
                     "lun": "[copyIndex('disks')]",
                     "managedDisk": {
-                      "storageAccountType": "[parameters('storageSettings').accountType]"
+                      "storageAccountType": "[parameters('storageSettings').dataAccountType]"
                     },
                     "caching": "None",
                     "createOption": "Empty"
@@ -285,7 +221,7 @@
       "condition": "[equals(parameters('storageSettings').dataDisks, 0)]",
       "name": "[concat(variables('namespace'), copyindex(), '-vm-nodisks-creation')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2019-05-01",
       "dependsOn": [
         "[concat('Microsoft.Compute/availabilitySets/', variables('namespace'), mod(copyindex(),variables('avSetCount')), '-av-set')]"
       ],
@@ -296,13 +232,10 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('templateBaseUrl'), '/partials/vm.json')]",
+          "uri": "[uri(parameters('_artifactsLocation'), concat('partials/vm.json', parameters('_artifactsLocationSasToken')))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "templateBaseUrl": {
-            "value": "[parameters('templateBaseUrl')]"
-          },
           "vm": {
             "value": "[parameters('vm')]"
           },
